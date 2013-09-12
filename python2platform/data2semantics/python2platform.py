@@ -35,6 +35,10 @@ def run(identifier, location, datafile):
     '''
       Starts a workflow in a separate process. If there is already a workflow
       running in the given location, the function throws an exception
+      
+      identifier: the string identifier for the workflow to run
+      location: where to output the results of the workflow
+      dataFile: which file to run the workflow on 
     ''' 
     # Read the workflow file into a string
     workflowFile = open('./'+identifier+'.yaml', 'r')

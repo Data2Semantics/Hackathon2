@@ -21,7 +21,7 @@ import subprocess as sp
 import os
 
 # The directory of the platform's pom.xml
-PLATFORM_DIR = ""
+PLATFORM_DIR = "/home/d2shack/hackathon2/git/d2s-tools/d2s-platform"
 
 def applicable(mimetype):
     '''

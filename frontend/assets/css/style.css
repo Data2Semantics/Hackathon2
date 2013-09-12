@@ -1,0 +1,59 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300italic,500italic,300,400,500,600);
+@import url(https://fonts.googleapis.com/css?family=Audiowide:400);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700);
+@import url(http://fonts.googleapis.com/css?family=Anaheim);
+@import url(http://fonts.googleapis.com/css?family=Merienda+One);
+
+body {
+  font:14px/1.5 "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight:300;
+}
+
+
+img {
+  max-width: 140%;
+  vertical-align: middle;
+  text-align: center;
+}
+
+
+
+.carousel, .carousel-inner, .carousel-inner .item {
+  background: url('../img/bg.png') repeat;
+}
+
+.carousel-inner .item h1{
+  font-size: 63px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 500;
+}
+
+h2 span.text-muted {
+  font-size: 80%;
+}
+                         
+			 
+div.imgholder {
+  height: 140px;
+  vertical-align: middle;
+  margin-bottom: .1em;
+}
+
+div.imgholder h1 {
+  color: black;
+  font-size: 63px;
+  vertical-align: middle;
+}
+
+div.imgholder h1 strong {
+  font-weight: 600;
+}
+
+h1.golden {
+  font-family: "Merienda One" !important;
+  font-weight: 400;
+  font-size: 100px !important;
+}
+

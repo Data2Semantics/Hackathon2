@@ -52,17 +52,9 @@ def run(identifier, location, datafile):
     wfFileOut.write(workflowYAML)
     wfFileOut.close()
     
-    # Change directory to the platform dir
-    myDirectory = os.getcwd() # remember our original working directory
-    os.chdir(PLATFORM_DIR)
-    
     # Call the platform
-    args = ["pwd"]
-    #args = ["mvn", "exec:java", "-Dexec.mainClass='org.data2semantics.platform.run.Run'", "-Dexec.args='--output {0} {0}/workflow.yaml'".format(location)]
-    sp.Popen(args) # run in the background
-    
-    os.chdir(myDirectory)
-    
+    args = ["mvn", "exec:java", "-Dexec.mainClass='org.data2semantics.platform.run.Run'", "-Dexec.args='--output {0} {0}/workflow.yaml'".format(location)]
+    sp.Popen(args, cwd=PLATFORM_DIR) # run in the background
     
 def status(location):
     '''

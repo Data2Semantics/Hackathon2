@@ -45,7 +45,7 @@ def run(identifier, location, datafile):
     workflowYAML = workflowFile.read()
     
     # Insert the filename
-    workflowYAML.substitute(file=datafile)
+    workflowYAML.format(datafile)
     
     # Write the workflow file to the location
     wfFileOut = open(location+'/workflow.yaml', 'w')
@@ -57,7 +57,7 @@ def run(identifier, location, datafile):
     os.chdir(PLATFORM_DIR)
     
     # Call the platform
-    args = ["mvn", "exec:java", "-Dexec:mainClass='org.data2semantics.platform.run.Run'", "-Dexec:args='--output $location $location/workflow.yaml'"]
+    args = ["mvn", "exec:java", "-Dexec:mainClass='org.data2semantics.platform.run.Run'", "-Dexec:args='--output {0} {0}/workflow.yaml'".format(location)]
     sp.Popen(args) # run in the background
     
     os.chdir(myDirectory)

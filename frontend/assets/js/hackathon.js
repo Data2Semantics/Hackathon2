@@ -5,3 +5,4 @@ function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
 
     return { width:srcWidth*ratio, height:srcHeight*ratio };
  }
+

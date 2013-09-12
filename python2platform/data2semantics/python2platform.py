@@ -21,7 +21,7 @@ import subprocess as sp
 import os
 
 # The directory of the platform's pom.xml
-PLATFORM_DIR = ""
+PLATFORM_DIR = "/home/d2shack/hackathon2/git/d2s-tools/d2s-platform"
 
 def applicable(mimetype):
     '''
@@ -35,29 +35,26 @@ def run(identifier, location, datafile):
     '''
       Starts a workflow in a separate process. If there is already a workflow
       running in the given location, the function throws an exception
+      
+      identifier: the string identifier for the workflow to run
+      location: where to output the results of the workflow
+      dataFile: which file to run the workflow on 
     ''' 
     # Read the workflow file into a string
     workflowFile = open('./'+identifier+'.yaml', 'r')
     workflowYAML = workflowFile.read()
     
     # Insert the filename
-    workflowYAML.substitute(file=datafile)
+    workflowYAML.format(datafile)
     
     # Write the workflow file to the location
     wfFileOut = open(location+'/workflow.yaml', 'w')
     wfFileOut.write(workflowYAML)
     wfFileOut.close()
     
-    # Change directory to the platform dir
-    myDirectory = os.getcwd() # remember our original working directory
-    os.chdir(PLATFORM_DIR)
-    
     # Call the platform
-    args = ["mvn", "exec:java", "-Dexec:mainClass='org.data2semantics.platform.run.Run'", "-Dexec:args='--output $location $location/workflow.yaml'"]
-    sp.Popen(args) # run in the background
-    
-    os.chdir(myDirectory)
-    
+    args = ["mvn", "exec:java", "-Dexec.mainClass='org.data2semantics.platform.run.Run'", "-Dexec.args='--output {0} {0}/workflow.yaml'".format(location)]
+    sp.Popen(args, cwd=PLATFORM_DIR) # run in the background
     
 def status(location):
     '''

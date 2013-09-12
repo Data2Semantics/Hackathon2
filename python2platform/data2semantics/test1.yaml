@@ -7,6 +7,6 @@ workflow:
         name: abc
         source: org.data2semantics.modules.Module
         inputs:
-          file: $file
+          file: {0}
           a: 3
           b: 4

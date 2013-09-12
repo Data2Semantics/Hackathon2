@@ -1,0 +1,12 @@
+workflow:
+  name: test1
+  description: Placeholder workflow
+  
+  modules:
+    - module: 
+        name: abc
+        source: org.data2semantics.modules.Module
+        inputs:
+          file: $file
+          a: 3
+          b: 4

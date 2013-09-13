@@ -40,10 +40,17 @@ uri_partition = {
             'description': 'Analyzes the URIs in the data and partitions them into functional units.'
         }
 
+adjacency = {
+            'run from': '/home/d2shack/hackathon2/git/d2s-tools/complexity-analysis-tools/complexity-analysis-tools', 
+            'name': 'Adjacency Matrices', 
+            'description': 'Creates density plots of the adjacency matrix of the data, for a variety of orderings.'
+        }
+
 workflows = {}
 workflows['compression'] = compression
 workflows['rdf_compression'] = rdf_compression
 workflows['uri_partition'] = uri_partition
+workflows['adjacency'] = uri_partition
 
 def applicable(mimetype):
     '''
@@ -55,6 +62,7 @@ def applicable(mimetype):
     if(mimetype is 'text/turtle' or mimetype is 'application/rdf+xml'):
         list.append[('rdf_compression', workflows['rdf_compression']['name'], workflows['rdf_compression']['description'])]
         list.append[('uri_partition', workflows['uri_partition']['name'], workflows['uri_partition']['description'])]
+        list.append[('adjacency', workflows['adjacency']['name'], workflows['adjacency']['description'])]
 
     return list
 

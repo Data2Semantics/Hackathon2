@@ -1,0 +1,22 @@
+workflow:
+
+   name: Adjacency Matrices
+   
+   modules:
+
+    - module:
+        name: load rdf
+        source: org.lilian.platform.graphs.LoadRDF
+        inputs:
+          type: turtle
+          file: {0}
+
+    - module:
+         name: adjacency
+         source: org.lilian.platform.graphs.AdjacencyMatrix
+         inputs:
+           data: 
+             reference: load rdf.data  
+                
+
+                

@@ -18,7 +18,7 @@ def github_list():
     calltype = request.args.get('type','orgs')
     
     if calltype == 'orgs':
-        user = request.args.get('organization','Data2Semantics')
+        user = request.args.get('user','Data2Semantics')
     else :
         user = request.args.get('user','')
     

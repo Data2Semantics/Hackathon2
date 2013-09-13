@@ -12,6 +12,10 @@
       <script src="assets/js/html5shiv.js"></script>
       <script src="assets/js/respond.min.js"></script>
     <![endif]-->
+    	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="//code.jquery.com/jquery.js"></script>
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="assets/js/hackathon.js" charset="utf-8"></script>
 
@@ -72,7 +76,7 @@
 						id="githubLogoImg" src="images/github_logo.png"></img>
 
 					</a>
-					<form id="githubForm" style="display:none;margin-top:25px;"class="form" role="form">
+					<form id="githubForm" style="display:none;margin-top:25px;" class="form" role="form" onSubmit="return proceedGithub();">
 						<div class="form-group">
 							<label class="sr-only" for="userName">User name</label> 
 							<input type="text" class="form-control"
@@ -83,12 +87,12 @@
 							<label for="githubType">Account type</label>
 							<select class="form-control" id="githubType">
 							  <option value="user">User</option>
-							  <option value="org">Organisation</option>
+							  <option value="orgs">Organisation</option>
 							</select>
 							
 						</div>
 						
-						<button type="submit" class="btn btn-default" onclick="proceedGithub();">Proceed</button>
+						<button type="submit" class="btn btn-default" >Proceed</button>
 					</form>
 				</div>
 			</div>
@@ -106,19 +110,24 @@
 	</div>
 
 
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<script src="//code.jquery.com/jquery.js"></script>
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+
 	<script type="text/javascript">
 	function githubLogoOnclick() {
 		$("#githubForm").show();
 	}
 	
 	function proceedGithub() {
-		var username = $("#userName").val();
-		var type = $("#githubType").val();
-		console.log(username + " " + type);
+		var githubHtmlPage = "github.html";
+		var redirectUrl = getUrl(githubHtmlPage, {
+			username: $("#userName").val(),
+			type : $("#githubType").val()
+			
+		});
+		console.log(window.location);
+		console.log(redirectUrl);
+		
+		window.location.href = redirectUrl;
+		return false;
 	}
 	
 	</script>

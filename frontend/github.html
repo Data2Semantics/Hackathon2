@@ -66,7 +66,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-12">
+			<div class="col-md-12" id='filelist'>
 				
 			</div>
 			
@@ -85,6 +85,19 @@
 		  $('.result').html(data);
 		  alert('Load was performed.');
 		});
+	
+	
+	$(function () {
+	    var username = $.urlParam('username');
+	    var type = $.urlParam('orgs');
+	    $.get('/github/clone', {username: username , type: type}, function(data){
+		  console.log(data);
+		  $.get('/browse', {name: data.name, path: data.path}, function(data){
+			console.log(data);
+		  });
+		  
+	    });
+	});
 	</script>
 </body>
 </html>

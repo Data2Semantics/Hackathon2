@@ -10,7 +10,7 @@ TEMPLATE_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp
 # Intialize the Flask Appliation
 app = Flask(__name__, template_folder = TEMPLATE_FOLDER)
 
-app.config['APPLICATION_ROOT'] = '/hackathon/backend/'
+
 
 app.debug = True
 

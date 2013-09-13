@@ -1,0 +1,8 @@
+workflow:
+  name: ExtractExcel 
+  modules:
+    - module:
+        name: ExtractExcel 
+        source: ../../modules/extractexcel.cfg 
+        inputs:
+          filepath: {0}

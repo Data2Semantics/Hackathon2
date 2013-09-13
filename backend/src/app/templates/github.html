@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Data2Semantics Golden Demo 2.0</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+
+<!-- Bootstrap -->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<!-- Latest compiled and minified JavaScript -->
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="assets/js/html5shiv.js"></script>
+      <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+    
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+
+
+</head>
+
+
+</head>
+<body>
+	<div class="navbar-wrapper">
+		<div class="container">
+
+			<div class="navbar navbar-inverse navbar-static-top">
+				<div class="container">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse"
+							data-target=".navbar-collapse">
+							<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+								class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#">Golden Demo</a>
+					</div>
+					<div class="navbar-collapse collapse">
+						<ul class="nav navbar-nav">
+							<li><a href="http://github.com/Data2Semantics/Hackathon2">Github</a></li>
+							<li><a href="http://www.data2semantics.org/">About
+									Data2Semantics</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	 <div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<ol class="breadcrumb">
+					<li><a href="index.html">Data source selection</a></li>
+					<li class="active" id="reposbreadcrumb">Repository Selection</li>
+					<li id="filebreadcrumb">File Selection</li>
+	
+				</ol>
+			</div>
+			
+		</div>
+		<div class="row">
+			<div class="col-md-6" id='github'>
+			      {% block repositories %}
+			      {% endblock %}
+			      
+
+			      <div id="browse">
+				    
+			      </div>
+			</div>
+			<div class="col-md-6">
+			      <div id="actions">
+				    
+			      </div>
+			</div>
+		</div>
+	</div>
+
+<script>
+    $(function () {
+        $('#filebreadcrumb').hide();
+        
+        $('.repository').on('click',function() {
+            var clone_url = $(this).attr('clone_url');
+            var name = $(this).attr('name');
+            
+            $.get('{{ url_for("github_clone") }}', { clone_url: clone_url, name: name}, function(data){
+                var name = data.name;
+                var path = data.path;
+                
+                $.get('{{ url_for("browse") }}', {name: name, path: path}, function(data) {
+                    $('#repositories').hide();
+                    $('#reposbreadcrumb').toggleClass('active');
+                    $('#filebreadcrumb').toggleClass('active');
+                    $('#filebreadcrumb').show();
+                    $('#browse').html(data);
+                    $('#browse').show();
+                });
+            });
+        });
+        
+        
+		      
+
+    });
+</script>
+</body>
+</html>
+

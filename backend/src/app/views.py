@@ -62,7 +62,7 @@ def github_clone():
         except Exception:
             git.pull(clone_url,_cwd=path)
         
-        return browse(path)
+        return jsonify({'name': name, 'path': path})
         
     else :
         return 'error'

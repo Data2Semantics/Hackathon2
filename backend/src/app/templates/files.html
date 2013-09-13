@@ -1,0 +1,21 @@
+
+<ul>
+    {% for f in files %}
+    <li><a name='{{ f.name }}' path='{{ f.path }}' mimetype='{{ f.mimetype }}'>{{ f.name }}</a></li>
+    {% endfor %}
+</ul>
+
+
+<script>
+    $(function () {
+        var username = '{{ username }}';
+        var type = '{{ type }}';
+        $.get('/github/clone', {username: username , type: type}, function(data){
+              console.log(data);
+              $.get('/browse', {name: data.name, path: data.path}, function(data){
+                    console.log(data);
+              });
+              
+        });
+    });
+</script>

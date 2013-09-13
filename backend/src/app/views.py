@@ -2,13 +2,13 @@ from flask import render_template, url_for, request, g, make_response
 import requests
 import json
 import sh
-import os.path
+import os
 from glob import glob
 
 from app import app
 
-GIT_SCRATCH = '/Users/hoekstra/projects/data2semantics/scratch/'
 
+GIT_SCRATCH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scratch')
 
 @app.route('/github/list', methods=['GET'])
 def github_list():

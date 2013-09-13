@@ -40,6 +40,7 @@ uri_partition = {
             'description': 'Analyzes the URIs in the data and partitions them into functional units.'
         }
 
+
 workflows = {}
 workflows['compression'] = compression
 workflows['rdf_compression'] = rdf_compression
@@ -67,6 +68,11 @@ def run(identifier, location, datafile):
       location: where to output the results of the workflow
       dataFile: which file to run the workflow on 
     ''' 
+    # we have the output dir. create a subdir for this file and workflow
+    outputDir = location + '/' + identifier + os.path.basename(datafile)
+    os.mkdir(outputDir)
+    
+    
     # Read the workflow file into a string
     workflowFile = open('./'+identifier+'.yaml', 'r')
     workflowYAML = workflowFile.read()
@@ -75,12 +81,12 @@ def run(identifier, location, datafile):
     workflowYAML.format(datafile)
     
     # Write the workflow file to the location
-    wfFileOut = open(location+'/workflow.yaml', 'w')
+    wfFileOut = open(outputDir+'/workflow.yaml', 'w')
     wfFileOut.write(workflowYAML)
     wfFileOut.close()
     
     # Call the platform
-    args = ["mvn", "exec:java", "-Dexec.mainClass=org.data2semantics.platform.run.Run", '-Dexec.args=--output {0} {0}/workflow.yaml'.format(location)]
+    args = ["mvn", "exec:java", "-Dexec.mainClass=org.data2semantics.platform.run.Run", '-Dexec.args=--output {0} {0}/workflow.yaml'.format(outputDir)]
     sp.Popen(args, cwd=workflows[identifier]['run from']) # run in the background
     
 def status(location):

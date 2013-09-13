@@ -12,7 +12,7 @@ from app import app
 
 
 GIT_SCRATCH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scratch')
-
+GIT_WORKFLOW_RESULTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'workflowResults')
 @app.route('/github/list', methods=['GET'])
 def github_list():
     
@@ -89,6 +89,14 @@ def getWorkflows():
 #     return ', '.join(workflows)
     return jsonify({'results': workflows} )    
 
+@app.route('/workflow/exec')
+def execWorkflow():
+    workflowId = request.args.get('workflowId')
+    filePath = request.args.get('filePath')
+    p2p.run(workflowId, GIT_WORKFLOW_RESULTS, filePath)
+    return jsonify({'results': True} )
+    
+    
 
 @app.route('/browse', methods=['GET'])
 def browse(path = None):

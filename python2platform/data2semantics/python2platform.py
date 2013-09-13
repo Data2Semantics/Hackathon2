@@ -42,8 +42,8 @@ uri_partition = {
 
 workflows = {}
 workflows['compression'] = compression
-workflows['rdf-compression'] = rdf_compression
-workflows['uri-partition'] = uri_partition
+workflows['rdf_compression'] = rdf_compression
+workflows['uri_partition'] = uri_partition
 
 def applicable(mimetype):
     '''
@@ -53,8 +53,8 @@ def applicable(mimetype):
     list = [('compression', workflows['compression']['name'], workflows['compression']['description'])]
     
     if(mimetype is 'text/turtle' or mimetype is 'application/rdf+xml'):
-        list.append[('rdf-compression', workflows['rdf-compression']['name'], workflows['rdf-compression']['description'])]
-        list.append[('uri-partition', workflows['uri-partition']['name'], workflows['uri-partition']['description'])]
+        list.append[('rdf_compression', workflows['rdf_compression']['name'], workflows['rdf_compression']['description'])]
+        list.append[('uri_partition', workflows['uri_partition']['name'], workflows['uri_partition']['description'])]
 
     return list
 

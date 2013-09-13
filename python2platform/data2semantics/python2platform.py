@@ -73,6 +73,9 @@ def applicable(mimetype):
         list.append[('uri_partition', workflows['uri_partition']['name'], workflows['uri_partition']['description'])]
         list.append[('adjacency', workflows['adjacency']['name'], workflows['adjacency']['description'])]
 
+    if(mimetype is 'application/xls' or mimetype is 'application/x-xls'):
+        list.append[('extract_xls', workflows['extract_xls']['name'], workflows['extract_xls']['description'])]
+
     return list
 
 def run(identifier, location, datafile):

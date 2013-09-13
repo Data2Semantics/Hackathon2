@@ -1,0 +1,9 @@
+workflow:
+  name: RDFCompression
+  modules:
+    - module:
+        name: RDFCompression
+        source: org.data2semantics.RDFmodel.modules.RDFCompression
+        inputs:
+          file: {0}
+          minlinks: [1, 2, 3, 4, 5, 6, 7, 8]

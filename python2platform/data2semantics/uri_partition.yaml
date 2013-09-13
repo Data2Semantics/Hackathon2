@@ -1,0 +1,9 @@
+workflow:
+  name: URIPartition
+  modules:
+    - module:
+        name: URIPartition
+        source: org.data2semantics.RDFmodel.modules.URIPartition
+        inputs:
+          file: {0}
+ 

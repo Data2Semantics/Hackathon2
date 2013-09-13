@@ -24,20 +24,39 @@ import os
 PLATFORM_DIR = "/home/d2shack/hackathon2/git/d2s-tools/d2s-platform"
 
 compression = {
-            'run from': '/home/d2shack/hackathon2/git/d2s-tools/', 
+            'run from': '/home/d2shack/hackathon2/git/d2s-tools/complexity-analysis-tools/complexity-analysis-tools', 
             'name': 'Compression', 
-            'description': 'Computer the compressed and uncompressed size. The compressed size of the data servers as an upper bound for the amount of information it contains.'
+            'description': 'Computes the compressed and uncompressed size. The compressed size of the data servers as an upper bound for the amount of information it contains.'
+        }
+rdf_compression = {
+            'run from': '/home/d2shack/hackathon2/git/d2s-tools/RDFModel', 
+            'name': 'RDF Compression', 
+            'description': 'Computes the size of an RDF dataset under a specialized model.'
         }
 
-workflows = {'compression': compression}
+uri_partition = {
+            'run from': '/home/d2shack/hackathon2/git/d2s-tools/RDFModel', 
+            'name': 'URI Partitioning', 
+            'description': 'Analyzes the URIs in the data and partitions them into functional units.'
+        }
+
+workflows = {}
+workflows['compression'] = compression
+workflows['rdf-compression'] = rdf_compression
+workflows['uri-partition'] = uri_partition
 
 def applicable(mimetype):
     '''
       Return a list of descriptors of workflows. Each entry is a triple of the 
       form: (identifier, human-readable name, description)
     '''
+    list = [('compression', workflows['compression']['name'], workflows['compression']['description'])]
     
-    return [('compression', workflows['compression']['name'], workflows['compression']['description'])]
+    if(mimetype is 'text/turtle' or mimetype is 'application/rdf+xml'):
+        list.append[('rdf-compression', workflows['rdf-compression']['name'], workflows['rdf-compression']['description'])]
+        list.append[('uri-partition', workflows['uri-partition']['name'], workflows['uri-partition']['description'])]
+
+    return list
 
 def run(identifier, location, datafile):
     '''

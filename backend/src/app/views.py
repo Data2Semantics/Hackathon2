@@ -62,9 +62,11 @@ def github_clone():
         git = sh.git.bake(_cwd=GIT_SCRATCH)
         
         try:
-            git.clone(clone_url)
+            git.clone(clone_url,_cwd=GIT_SCRATCH)
         except Exception:
-            git.pull(clone_url,_cwd=path)
+            
+            print "Git repository was already cloned, should pull a new version, but will skip that for now"
+            # git.pull(clone_url,_cwd=path)
         
         return jsonify({'name': name, 'path': path})
         

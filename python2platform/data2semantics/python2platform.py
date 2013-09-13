@@ -92,7 +92,7 @@ def run(identifier, location, datafile):
     workflowYAML = workflowFile.read()
     
     # Insert the filename
-    workflowYAML.format(datafile)
+    workflowYAML = workflowYAML.format(datafile)
     
     # Write the workflow file to the location
     wfFileOut = open(location+'/workflow.yaml', 'w')

@@ -1,25 +1,14 @@
 {% extends 'github_base.html' %}
 {% block github %}
-<ul>
-{% for r in repos %}
-
-    <li><a class='repository' clone_url='{{r.clone_url}}' name='{{ r.name }}'">{{r.name}}</a></li>
+<div id='repositories'>
+    <h4>Repositories by {{ user }}</h4>
+    <ul>
+    {% for r in repos %}
     
-{% endfor %}
-</ul>
-
-<script>
-    $(function () {
-        $('.repository').on('click',function() {
-            var clone_url = $(this).attr('clone_url');
-            var name = $(this).attr('name');
-            
-            $.get('/github/clone', { clone_url: clone_url, name: name}, function(data){
-                $('#github').html(data);
-            });
-        });
-    });
-
-</script>
+        <li><a class='repository' clone_url='{{r.clone_url}}' name='{{ r.name }}'">{{r.name}}</a></li>
+        
+    {% endfor %}
+    </ul>
+</div>
 
 {% endblock %}

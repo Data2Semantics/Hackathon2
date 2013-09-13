@@ -74,4 +74,7 @@ def progress_bar():
     
     return render_template('progress.html',message=message)
     
+@app.route('/browse', methods=['GET'])
+def browse():
+    pass
 

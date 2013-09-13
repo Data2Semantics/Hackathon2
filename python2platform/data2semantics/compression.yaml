@@ -1,0 +1,10 @@
+workflow:
+  name: Compression
+  description: GZIP Compression tests
+  
+  modules:
+    - module: 
+        name: compression
+        source: org.data2semantics.cat.modules.Compression
+        inputs:
+          file: {0}

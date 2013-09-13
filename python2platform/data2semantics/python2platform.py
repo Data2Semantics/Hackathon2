@@ -23,13 +23,21 @@ import os
 # The directory of the platform's pom.xml
 PLATFORM_DIR = "/home/d2shack/hackathon2/git/d2s-tools/d2s-platform"
 
+compression = {
+            'run from': '/home/d2shack/hackathon2/git/d2s-tools/', 
+            'name': 'Compression', 
+            'description': 'Computer the compressed and uncompressed size. The compressed size of the data servers as an upper bound for the amount of information it contains.'
+        }
+
+workflows = {'compression': compression}
+
 def applicable(mimetype):
     '''
       Return a list of descriptors of workflows. Each entry is a triple of the 
       form: (identifier, human-readable name, description)
     '''
     
-    return [('test1', 'Test workflow 1', 'This workflows tests something')]
+    return [('compression', workflows['compression']['name'], workflows['compression']['description'])]
 
 def run(identifier, location, datafile):
     '''
@@ -54,7 +62,7 @@ def run(identifier, location, datafile):
     
     # Call the platform
     args = ["mvn", "exec:java", "-Dexec.mainClass=org.data2semantics.platform.run.Run", '-Dexec.args=--output {0} {0}/workflow.yaml'.format(location)]
-    sp.Popen(args, cwd=PLATFORM_DIR) # run in the background
+    sp.Popen(args, workflows[identifier]['run from']) # run in the background
     
 def status(location):
     '''

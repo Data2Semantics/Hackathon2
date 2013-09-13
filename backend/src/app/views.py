@@ -32,7 +32,7 @@ def github_list():
         repos = json.loads(r.text or r.content)
         
         
-        return render_template('github_repositories.html', repos=repos)
+        return render_template('github_repositories.html', user=user, repos=repos)
         
         
         
@@ -63,8 +63,18 @@ def github_clone():
         
         files = glob("{}/*".format(path))
         
-        
-        return path
+        return render_template('filelist.html', files=[os.path.split(p) for p in files])
         
     else :
         return 'error'
+    
+@app.route('/progress', methods=['GET'])
+def progress_bar():
+    message = request.args.get('message','Busy...')
+    
+    return render_template('progress.html',message=message)
+    
+@app.route('/browse', methods=['GET'])
+def browse():
+    pass
+

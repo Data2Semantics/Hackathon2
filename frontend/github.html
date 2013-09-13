@@ -80,7 +80,12 @@
 	<script src="//code.jquery.com/jquery.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
-
+	<script type="text/javascript">
+	$.get('ajax/test.html', function(data) {
+		  $('.result').html(data);
+		  alert('Load was performed.');
+		});
+	</script>
 </body>
 </html>
 

@@ -1,9 +1,10 @@
-from flask import render_template, url_for, request, g, make_response
+from flask import render_template, url_for, request, g, make_response, jsonify
 import requests
 import json
 import sh
 import os
 from glob import glob
+import mimetypes
 
 from app import app
 
@@ -61,9 +62,7 @@ def github_clone():
         except Exception:
             git.pull(clone_url,_cwd=path)
         
-        files = glob("{}/*".format(path))
-        
-        return render_template('filelist.html', files=[os.path.split(p) for p in files])
+        return browse(path)
         
     else :
         return 'error'
@@ -75,6 +74,27 @@ def progress_bar():
     return render_template('progress.html',message=message)
     
 @app.route('/browse', methods=['GET'])
-def browse():
-    pass
+def browse(path = None):
+    if not path :
+        path = request.args.get('path')
+        
+    files = glob("{}/*".format(path))
+    
+    mimetypes.init()
+    
+    filelist = []
+    for p in files:
+        (pth, fn) = os.path.split(p)
+        (mimetype,e) = mimetypes.guess_type(p)
+        
+        if os.path.isdir(p) :
+            filetype = 'dir'
+        else :
+            filetype = 'file'
+        
+        filelist.append({'name': fn, 'path': p, 'mime': mimetype, 'type': filetype})
+    
+    
+    return jsonify({'results': filelist} )    
+
 

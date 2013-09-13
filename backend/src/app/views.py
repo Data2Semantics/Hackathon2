@@ -3,6 +3,8 @@ import requests
 import json
 import sh
 import os
+import python2platform as p2p
+
 from glob import glob
 import mimetypes
 
@@ -72,7 +74,22 @@ def progress_bar():
     message = request.args.get('message','Busy...')
     
     return render_template('progress.html',message=message)
+  
+@app.route('/workflow/getList', methods=['GET'])
+def getWorkflows():
+    mimeType = request.args.get('mimeType')
+    #mimeType = 'text/turtle'
     
+    workflows = p2p.applicable(mimeType)
+    
+    #realpath = os.path.realpath(__file__)
+    #currentDir = os.path.dirname(realpath)
+    #files = glob("{}/*".format(currentDir + '/../../../python2platform/data2semantics/python2platform.py'))
+    #files = glob("{}/*".format(path))
+#     return ', '.join(workflows)
+    return jsonify({'results': workflows} )    
+
+
 @app.route('/browse', methods=['GET'])
 def browse(path = None):
     if not path :

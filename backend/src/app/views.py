@@ -77,6 +77,16 @@ def progress_bar():
     
     return render_template('progress.html',message=message)
   
+@app.route('/actions', methods=['GET'])
+def actions():
+    mimetype = request.args.get('mimetype')
+    path = request.args.get('path')
+    
+    workflows = p2p.applicable(mimetype)
+    
+    return render_template('actions.html', name=name, path=path, mimetype=mimetype, workflows=workflows)
+
+  
 @app.route('/workflow/getList', methods=['GET'])
 def get_workflows():
     mimeType = request.args.get('mimeType')

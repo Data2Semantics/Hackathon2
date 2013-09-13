@@ -48,29 +48,30 @@
 
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-md-12">
-			<ol class="breadcrumb">
-				<li><a href="index.html">Data source selection</a></li>
-				<li class="active">File Selection</li>
-
-			</ol>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-12">
-			<div class="well">
-				<h1 style="text-align: center">Select Files</h1>
+	 <div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<ol class="breadcrumb">
+					<li><a href="index.html">Data source selection</a></li>
+					<li class="active">File Selection</li>
+	
+				</ol>
 			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-12">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="well">
+					<h1 style="text-align: center">Select Files</h1>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				
+			</div>
 			
 		</div>
-		
 	</div>
-
 
 
 
@@ -79,7 +80,12 @@
 	<script src="//code.jquery.com/jquery.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
-
+	<script type="text/javascript">
+	$.get('ajax/test.html', function(data) {
+		  $('.result').html(data);
+		  alert('Load was performed.');
+		});
+	</script>
 </body>
 </html>
 

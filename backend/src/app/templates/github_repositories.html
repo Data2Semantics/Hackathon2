@@ -17,7 +17,7 @@
             var clone_url = $(this).attr('clone_url');
             var name = $(this).attr('name');
             
-            $.get('/hackathon/backend/github/clone', { clone_url: clone_url, name: name}, function(data){
+            $.get('{{ url_for("github_clone") }}', { clone_url: clone_url, name: name}, function(data){
                 // Run the File Browsing stuff
                 // 'data' will be the listing of the git repo in json format
                 // If it's a directory:

@@ -81,7 +81,7 @@ def run(identifier, location, datafile):
     
     # Call the platform
     args = ["mvn", "exec:java", "-Dexec.mainClass=org.data2semantics.platform.run.Run", '-Dexec.args=--output {0} {0}/workflow.yaml'.format(location)]
-    sp.Popen(args, workflows[identifier]['run from']) # run in the background
+    sp.Popen(args, cwd=workflows[identifier]['run from']) # run in the background
     
 def status(location):
     '''

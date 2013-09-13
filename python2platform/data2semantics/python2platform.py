@@ -29,13 +29,13 @@ compression = {
             'description': 'Computes the compressed and uncompressed size. The compressed size of the data servers as an upper bound for the amount of information it contains.'
         }
 rdf_compression = {
-            'run from': '/home/d2shack/hackathon2/git/d2s-tools/RDFModel', 
+            'run from': '/home/d2shack/hackathon2/git/d2s-tools/RDFmodel', 
             'name': 'RDF Compression', 
             'description': 'Computes the size of an RDF dataset under a specialized model.'
         }
 
 uri_partition = {
-            'run from': '/home/d2shack/hackathon2/git/d2s-tools/RDFModel', 
+            'run from': '/home/d2shack/hackathon2/git/d2s-tools/RDFmodel', 
             'name': 'URI Partitioning', 
             'description': 'Analyzes the URIs in the data and partitions them into functional units.'
         }

@@ -46,11 +46,20 @@ adjacency = {
             'description': 'Creates density plots of the adjacency matrix of the data, for a variety of orderings.'
         }
 
+extract_xls = {
+            'run from': '/home/d2shack/hackathon2/git/d2s-tools/RDFmodel', 
+            'name': 'Extract XLS string', 
+            'description': 'Test python module extracting string from xls.'
+        }
+
+
 workflows = {}
 workflows['compression'] = compression
 workflows['rdf_compression'] = rdf_compression
 workflows['uri_partition'] = uri_partition
 workflows['adjacency'] = uri_partition
+workflows['extract_xls'] = extract_xls
+ 
 
 def applicable(mimetype):
     '''

@@ -4,20 +4,23 @@
 <title>Data2Semantics Golden Demo 2.0</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap -->
-<link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet"
-	media="screen">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<!-- Latest compiled and minified JavaScript -->
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
       <script src="assets/js/html5shiv.js"></script>
       <script src="assets/js/respond.min.js"></script>
     <![endif]-->
+    
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-<script src="assets/js/hackathon.js" charset="utf-8"></script>
 
 
-<!-- Custom style for D2S Code Project-->
-<link href="assets/css/style.css" rel="stylesheet">
+
 </head>
 
 
@@ -53,52 +56,25 @@
 			<div class="col-md-12">
 				<ol class="breadcrumb">
 					<li><a href="index.html">Data source selection</a></li>
-					<li class="active">File Selection</li>
+					<li class="active" id="reposbreadcrumb">Repository Selection</li>
+					<li id="filebreadcrumb">File Selection</li>
 	
 				</ol>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-12">
-				<div class="well">
-					<h1 style="text-align: center">Select Files</h1>
-				</div>
+			<div class="col-md-12" id='github'>
+			      {% block repositories %}
+			      {% endblock %}
+			      
+
+			      <div id="browse">
+				    
+			      </div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-12" id='filelist'>
-				
-			</div>
-			
 		</div>
 	</div>
 
-
-
-
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<script src="//code.jquery.com/jquery.js"></script>
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="assets/bootstrap/js/bootstrap.min.js"></script>
-	<script type="text/javascript">
-	$.get('ajax/test.html', function(data) {
-		  $('.result').html(data);
-		  alert('Load was performed.');
-		});
-	
-	
-	$(function () {
-	    var username = $.urlParam('username');
-	    var type = $.urlParam('orgs');
-	    $.get('/github/clone', {username: username , type: type}, function(data){
-		  console.log(data);
-		  $.get('/browse', {name: data.name, path: data.path}, function(data){
-			console.log(data);
-		  });
-		  
-	    });
-	});
-	</script>
 </body>
 </html>
 

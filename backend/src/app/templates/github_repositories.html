@@ -1,7 +1,7 @@
-{% extends 'github_base.html' %}
-{% block github %}
+{% extends 'github.html' %}
+{% block repositories %}
 <div id='repositories'>
-    <h4>Repositories by {{ user }}</h4>
+    <h4>Repositories by {{ username }}</h4>
     <ul>
     {% for r in repos %}
     
@@ -13,11 +13,25 @@
 
 <script>
     $(function () {
+        $('#filebreadcrumb').hide();
+        
         $('.repository').on('click',function() {
             var clone_url = $(this).attr('clone_url');
             var name = $(this).attr('name');
             
             $.get('{{ url_for("github_clone") }}', { clone_url: clone_url, name: name}, function(data){
+                var name = data.name;
+                var path = data.path;
+                
+                $.get('{{ url_for("browse") }}', {name: name, path: path}, function(data) {
+                    $('#repositories').hide();
+                    $('#reposbreadcrumb').toggleClass('active');
+                    $('#filebreadcrumb').toggleClass('active');
+                    $('#filebreadcrumb').show();
+                    $('#browse').html(data);
+                    $('#browse').show();
+                });
+                
                 // Run the File Browsing stuff
                 // 'data' will be the listing of the git repo in json format
                 // If it's a directory:

@@ -6,26 +6,28 @@ import os
 import python2platform as p2p
 
 from glob import glob
-import mimetypes
+import magic
+
 
 from app import app
 
 
 GIT_SCRATCH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scratch')
+
 GIT_WORKFLOW_RESULTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'workflowResults')
-@app.route('/github/list', methods=['GET'])
-def github_list():
+
+
+@app.route('/github', methods=['GET'])
+def github():
+
     
     # Get the organization to be used from the GET
     
     calltype = request.args.get('type','orgs')
+    username = request.args.get('username','Data2Semantics')
+
     
-    if calltype == 'orgs':
-        user = request.args.get('user','Data2Semantics')
-    else :
-        user = request.args.get('user','')
-    
-    r = requests.get('https://api.github.com/{}/{}/repos'.format(calltype,user))
+    r = requests.get('https://api.github.com/{}/{}/repos'.format(calltype,username))
     
     repositories = []
     
@@ -35,7 +37,7 @@ def github_list():
         repos = json.loads(r.text or r.content)
         
         
-        return render_template('github_repositories.html', user=user, repos=repos)
+        return render_template('github_repositories.html', type=calltype, username=username, repos=repos)
         
         
         
@@ -105,21 +107,23 @@ def browse(path = None):
         
     files = glob("{}/*".format(path))
     
-    mimetypes.init()
     
     filelist = []
     for p in files:
         (pth, fn) = os.path.split(p)
-        (mimetype,e) = mimetypes.guess_type(p)
+        
+        mimetype = magic.from_file(p, mime=True)
         
         if os.path.isdir(p) :
             filetype = 'dir'
         else :
             filetype = 'file'
         
+        print fn, mimetype
+        
         filelist.append({'name': fn, 'path': p, 'mime': mimetype, 'type': filetype})
     
-    
-    return jsonify({'results': filelist} )    
+    return render_template('files.html', files=filelist)
+    #return jsonify({'results': filelist} )    
 
 

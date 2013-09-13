@@ -8,7 +8,7 @@ workflow:
         name: load rdf
         source: org.data2semantics.cat.modules.LoadRDF
         inputs:
-          type: turtle
+          type: xml
           file: {0}
 
     - module:

@@ -3,13 +3,16 @@
 <head>
 <title>Data2Semantics Golden Demo 2.0</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+
 <!-- Bootstrap -->
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 <!-- Latest compiled and minified JavaScript -->
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 
-<script src="http://code.jquery.com/jquery-latest.js"></script>
+
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
@@ -61,9 +64,10 @@
 	
 				</ol>
 			</div>
+			
 		</div>
 		<div class="row">
-			<div class="col-md-12" id='github'>
+			<div class="col-md-6" id='github'>
 			      {% block repositories %}
 			      {% endblock %}
 			      
@@ -72,9 +76,42 @@
 				    
 			      </div>
 			</div>
+			<div class="col-md-6">
+			      <div id="actions">
+				    
+			      </div>
+			</div>
 		</div>
 	</div>
 
+<script>
+    $(function () {
+        $('#filebreadcrumb').hide();
+        
+        $('.repository').on('click',function() {
+            var clone_url = $(this).attr('clone_url');
+            var name = $(this).attr('name');
+            
+            $.get('{{ url_for("github_clone") }}', { clone_url: clone_url, name: name}, function(data){
+                var name = data.name;
+                var path = data.path;
+                
+                $.get('{{ url_for("browse") }}', {name: name, path: path}, function(data) {
+                    $('#repositories').hide();
+                    $('#reposbreadcrumb').toggleClass('active');
+                    $('#filebreadcrumb').toggleClass('active');
+                    $('#filebreadcrumb').show();
+                    $('#browse').html(data);
+                    $('#browse').show();
+                });
+            });
+        });
+        
+        
+		      
+
+    });
+</script>
 </body>
 </html>
 

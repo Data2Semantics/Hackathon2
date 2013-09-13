@@ -78,7 +78,7 @@ def progress_bar():
     return render_template('progress.html',message=message)
   
 @app.route('/workflow/getList', methods=['GET'])
-def getWorkflows():
+def get_workflows():
     mimeType = request.args.get('mimeType')
     #mimeType = 'text/turtle'
     
@@ -121,9 +121,9 @@ def browse(path = None):
         
         print fn, mimetype
         
-        filelist.append({'name': fn, 'path': p, 'mime': mimetype, 'type': filetype})
+        filelist.append({'name': fn, 'path': p, 'mimetype': mimetype, 'type': filetype})
+    
     
     return render_template('files.html', files=filelist)
-    #return jsonify({'results': filelist} )    
 
 

@@ -1,0 +1,17 @@
+<h4>Possible Actions for '{{ name }}'</h4>
+
+{% for (identifier, name, description) in workflows %}
+    <div class='well'>
+        <p><strong>{{ name }}</strong></p>
+        <p>{{ description }}</p>
+        <a class='workflow btn' path='{{ path }}' identifier='{{ identifier }}'>Run</a>
+    </div>
+{% endfor %}
+
+<script>
+$(function() {
+    $('.workflow').on('click', function(){
+        $.get('');
+    })
+});
+</script>

@@ -81,6 +81,7 @@ def progress_bar():
 def actions():
     mimetype = request.args.get('mimetype')
     path = request.args.get('path')
+    name = request.args.get('name')
     
     workflows = p2p.applicable(mimetype)
     

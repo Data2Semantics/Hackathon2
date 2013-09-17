@@ -11,6 +11,10 @@ TEMPLATE_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp
 app = Flask(__name__, template_folder = TEMPLATE_FOLDER)
 
 
+SCRATCH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scratch')
+
+WORKFLOW_RESULTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results')
+
 
 app.debug = True
 

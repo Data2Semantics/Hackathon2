@@ -21,7 +21,7 @@ $(function() {
     	var workflowId = $(this).attr("identifier");
     	$.get('http://semweb.cs.vu.nl/hackathon/backend/workflow/exec?filePath=' + encodeURIComponent('{{ path }}') + '&workflowId=' + encodeURIComponent(workflowId));
     	
-    	$(this).attr("disabled","disabled"));
+    	$(this).addClass('disabled');
     	//first fix href link of button to show results
     	$("#showResults").attr("href","http://semweb.cs.vu.nl/hackathon/workflowResults/" + workflowId + basename('{{ path }}'));
         $("#showResults").show();

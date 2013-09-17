@@ -172,7 +172,7 @@
 		  a.append(badge);
 		  
 		  a.on('click', function(e){
-			$.get('{{ url_for("actions")}}', {name: value.name, path: value.path, type: value.type, mimetype: value.mimetype}, function(data){
+			$.get('{{ url_for("actions") }}', {name: value.name, path: value.path, type: value.type, mimetype: value.mimetype}, function(data){
 			      $(actionpane).html(data); 
 			});
 		  });

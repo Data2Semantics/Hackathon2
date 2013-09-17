@@ -115,13 +115,34 @@ def getWorkflowStatus():
     return jsonify({'status': p2p.status(results_path)} )
 
 
+import httplib
+
 @app.route('/workflow/push')
 def pushProvenanceResult():
-    filedata = request.args.get('filedata')
-    context  = request.args.get('context')
+
+    workflowId = request.args.get('workflowId')
+    path = request.args.get('path')
+    name = request.args.get('name')
+
+    context = "<http://" + os.path.join(compression, name) + ">"
     
+    absolute_path = os.path.join(str(SCRATCH),str(path))
+    results_path = os.path.join(os.path.join(str(WORKFLOW_RESULTS),str(path)),str(workflowId))
+  
+    prov_filename = os.path.join(os.path.join(str(results_path), "prov"),"prov-o.ttl")
+    prov_file = open(prov_filename)
+    prov_data = prov_file.read()
+
+    connection =  httplib.HTTPConnection('semweb.cs.vu.nl:8080')
+
+    connection.request('PUT', '/openrdf-sesame/repositories/ct/statements?context='+context, prov_data, headers =  {'content-type':'text/turtle;charset=UTF-8'})
+
+    result = connection.getresponse()
     
-    return 
+    prov_file.close()
+
+    return jsonify({'status': 'true'} )
+
 
     
 @app.route('/browse', methods=['GET'])

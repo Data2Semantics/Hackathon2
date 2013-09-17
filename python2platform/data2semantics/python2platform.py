@@ -91,7 +91,9 @@ def applicable(mimetype):
     if(mimetype is 'text/turtle' or mimetype is 'application/rdf+xml'):
         list.append[('rdf_compression', workflows['rdf_compression']['name'], workflows['rdf_compression']['description'])]
         list.append[('uri_partition', workflows['uri_partition']['name'], workflows['uri_partition']['description'])]
-        list.append[('adjacency', workflows['adjacency']['name'], workflows['adjacency']['description'])]
+        
+    if(mimetype is 'text/turtle'):
+	list.append[('adjacency', workflows['adjacency']['name'], workflows['adjacency']['description'])]
         list.append[('large_graph', workflows['large_graph']['name'], workflows['large_graph']['description'])]
         list.append[('small_graph', workflows['small_graph']['name'], workflows['small_graph']['description'])]
         list.append[('huge_graph', workflows['huge_graph']['name'], workflows['huge_graph']['description'])]

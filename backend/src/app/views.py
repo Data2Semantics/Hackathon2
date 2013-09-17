@@ -118,6 +118,6 @@ def browse():
     filelist, parent = git_repo.browse(path)
     
     
-    return render_template('files.html', files=filelist)
+    return jsonify({'parent': parent, 'files': filelist})
 
 

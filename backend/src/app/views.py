@@ -98,7 +98,7 @@ def execWorkflow():
     
     absolute_path = os.path.join(SCRATCH,path)
     
-    results_path = os.path.join(os.path.join(WORKFLOW_RESULTS,workflowId),path)
+    results_path = os.path.join(os.path.join(WORKFLOW_RESULTS,path),workflowId)
     
     p2p.run(workflowId, results_path, absolute_path)
     return jsonify({'results': True} )
@@ -106,12 +106,23 @@ def execWorkflow():
 @app.route('/workflow/status')
 def getWorkflowStatus():
     workflowId = request.args.get('workflowId')
-    filePath = request.args.get('filePath')
-    location = getWorkflowLocation(workflowId, filePath)
-    return jsonify({'status': p2p.status(location)} )
+    path = request.args.get('path')
+    name = request.args.get('name')
+    
+    absolute_path = os.path.join(SCRATCH,path)
+    
+    results_path = os.path.join(os.path.join(WORKFLOW_RESULTS,path),workflowId)
+    return jsonify({'status': p2p.status(results_path)} )
 
-def getWorkflowLocation(workflowId, inputFilePath):
-    return GIT_WORKFLOW_RESULTS + '/' + workflowId + os.path.basename(inputFilePath)
+
+@app.route('/workflow/push')
+def pushProvenanceResult():
+    filedata = request.args.get('filedata')
+    context  = request.args.get('context')
+    
+    
+    return 
+
     
 @app.route('/browse', methods=['GET'])
 def browse():

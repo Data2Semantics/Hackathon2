@@ -33,26 +33,33 @@ function updateStatus(status) {
 }
 
 function callUpdateStatus() {
-	var workflowId = $('#runWorkflowBtn').attr("identifier");
+	console.log("callupdatestatus");
+	var path = $('#runWorkflowBtn').attr("path");
+	var identifier = $('#runWorkflowBtn').attr("identifier");
 	var name = $('#runWorkflowBtn').attr("name");
-	$.get('http://semweb.cs.vu.nl/hackathon/backend/workflow/status?filePath=' + encodeURIComponent(name) + '&workflowId=' + encodeURIComponent(identifier), function( jsonResult ) {
+	var path = $('#runWorkflowBtn').attr("path");
+	console.log(path);
+	$.get('http://semweb.cs.vu.nl/hackathon/backend/workflow/status?path=' + encodeURIComponent(path) + '&name=' + encodeURIComponent(name) + '&workflowId=' + encodeURIComponent(identifier), function( jsonResult ) {
 		  updateStatus(jsonResult['status']);
 		});
+	console.log("callupdatestatus2");
 }
 
 function updateShowResultsHref() {
+	console.log("updateshowresultshref");
 	var identifier = $('#runWorkflowBtn').attr("identifier");
-	var name = $('#runWorkflowBtn').attr("name");
-	$("#showResults").attr("href","http://semweb.cs.vu.nl/hackathon/workflowResults/" + name + identifier + "/report/index.html");
+	var path = $('#runWorkflowBtn').attr("path");
+	$("#showResults").attr("href","http://semweb.cs.vu.nl/hackathon/results/" + path + "/" + identifier + "/report/index.html");
 }
 
 $(function() {
 	updateShowResultsHref();
 	callUpdateStatus();
     $('#runWorkflowBtn').on('click', function(){
+    	
     	var identifier = $(this).attr("identifier");
-	var path = $(this).attr("path");
-	var name = $(this).attr("name");
+		var path = $(this).attr("path");
+		var name = $(this).attr("name");
     	$.get('{{ url_for("execWorkflow") }}', {path : path, workflowId: identifier, name: name});
     	
     	$(this).addClass('disabled');

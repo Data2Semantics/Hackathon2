@@ -7,6 +7,7 @@ import python2platform as p2p
 
 from glob import glob
 import magic
+from util.gitrepository import GitRepository
 
 
 from app import app
@@ -14,7 +15,7 @@ from app import app
 
 GIT_SCRATCH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scratch')
 
-GIT_WORKFLOW_RESULTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'workflowResults')
+GIT_WORKFLOW_RESULTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results')
 
 
 @app.route('/github', methods=['GET'])
@@ -51,24 +52,15 @@ def github_clone():
     name = request.args.get('name','test')
     
     if clone_url :
+        git_repo = GitRepository(name)
         
-        print clone_url
-        print name
-    
-        path = os.path.join(GIT_SCRATCH,name)
+        g.set('repository', git_repo)
         
-        print path
+        git_repo.initialize(clone_url)
         
-        git = sh.git.bake(_cwd=GIT_SCRATCH)
+        path = git_repo.path
         
-        try:
-            git.clone(clone_url,_cwd=GIT_SCRATCH)
-        except Exception:
-            
-            print "Git repository was already cloned, should pull a new version, but will skip that for now"
-            # git.pull(clone_url,_cwd=path)
-        
-        return jsonify({'name': name, 'path': path})
+        return jsonify({'name': name})
         
     else :
         return 'error'
@@ -112,31 +104,18 @@ def execWorkflow():
     return jsonify({'results': True} )
     
     
-
 @app.route('/browse', methods=['GET'])
 def browse(path = None):
     if not path :
         path = request.args.get('path')
         
-    files = glob("{}/*".format(path))
+    name = request.args.get('name')
+    if not name:
+        return "Error"
     
+    git_repo = g.get('repository')
     
-    filelist = []
-    for p in files:
-        (pth, fn) = os.path.split(p)
-        
-        mimetype = magic.from_file(p, mime=True)
-        
-        if os.path.isdir(p) :
-            filetype = 'dir'
-        else :
-            filetype = 'file'
-        
-        print fn, mimetype
-        
-        filelist.append({'name': fn, 'path': p, 'mimetype': mimetype, 'type': filetype})
+    filelist, parent = git_repo.browse(path)
     
-    
-    return render_template('files.html', files=filelist)
-
+    return jsonify({'parent': parent, 'path': path, 'files': filelist})
 

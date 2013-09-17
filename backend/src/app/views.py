@@ -93,9 +93,14 @@ def get_workflows():
 @app.route('/workflow/exec')
 def execWorkflow():
     workflowId = request.args.get('workflowId')
-    filePath = request.args.get('filePath')
-    resultsOutput = getWorkflowLocation(workflowId, filePath)
-    p2p.run(workflowId, resultsOutput, filePath)
+    path = request.args.get('path')
+    name = request.args.get('name')
+    
+    absolute_path = os.path.join(SCRATCH,path)
+    
+    results_path = os.path.join(os.path.join(WORKFLOW_RESULTS,workflowId),path)
+    
+    p2p.run(workflowId, results_path, absolute_path)
     return jsonify({'results': True} )
     
 @app.route('/workflow/status')

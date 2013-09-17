@@ -1,10 +1,10 @@
 <h4>Possible Actions for '{{ name }}'</h4>
 
-{% for (identifier, name, description) in workflows %}
+{% for (identifier, wfname, description) in workflows %}
     <div class='well'>
-        <p><strong>{{ name }}</strong></p>
+        <p><strong>{{ wfname }}</strong></p>
         <p>{{ description }}</p>
-        <a id='runWorkflowBtn' class='workflow btn' path='{{ path }}' identifier='{{ identifier }}'>Run</a>
+        <a id='runWorkflowBtn' class='workflow btn' name='{{ name }}' path='{{ path }}' identifier='{{ identifier }}'>Run</a>
         <a id="showResults" style="display:none;" class='workflow btn' href="" target="_blank">Show results</a>
         <a id="showProgress" style="display:none;" class='workflow btn' href="" target="_blank">Show progress</a>
         
@@ -34,21 +34,26 @@ function updateStatus(status) {
 
 function callUpdateStatus() {
 	var workflowId = $('#runWorkflowBtn').attr("identifier");
-	$.get('http://semweb.cs.vu.nl/hackathon/backend/workflow/status?filePath=' + encodeURIComponent('{{ path }}') + '&workflowId=' + encodeURIComponent(workflowId), function( jsonResult ) {
+	var name = $('#runWorkflowBtn').attr("name");
+	$.get('http://semweb.cs.vu.nl/hackathon/backend/workflow/status?filePath=' + encodeURIComponent(name) + '&workflowId=' + encodeURIComponent(identifier), function( jsonResult ) {
 		  updateStatus(jsonResult['status']);
 		});
 }
 
 function updateShowResultsHref() {
-	var workflowId = $('#runWorkflowBtn').attr("identifier");
-	$("#showResults").attr("href","http://semweb.cs.vu.nl/hackathon/workflowResults/" + workflowId + basename('{{ path }}') + "/report/index.html");
+	var identifier = $('#runWorkflowBtn').attr("identifier");
+	var name = $('#runWorkflowBtn').attr("name");
+	$("#showResults").attr("href","http://semweb.cs.vu.nl/hackathon/workflowResults/" + name + identifier + "/report/index.html");
 }
+
 $(function() {
 	updateShowResultsHref();
 	callUpdateStatus();
     $('#runWorkflowBtn').on('click', function(){
-    	var workflowId = $(this).attr("identifier");
-    	$.get('http://semweb.cs.vu.nl/hackathon/backend/workflow/exec?filePath=' + encodeURIComponent('{{ path }}') + '&workflowId=' + encodeURIComponent(workflowId));
+    	var identifier = $(this).attr("identifier");
+	var path = $(this).attr("path");
+	var name = $(this).attr("name");
+    	$.get('{{ url_for("execWorkflow") }}', {path : path, workflowId: identifier, name: name});
     	
     	$(this).addClass('disabled');
         $("#showResults").show();

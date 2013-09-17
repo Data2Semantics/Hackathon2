@@ -1,0 +1,22 @@
+workflow:
+
+   name: Large Graph RDF Analysis  
+   
+   modules:
+
+    - module:
+        name: load rdf
+        source: org.data2semantics.cat.modules.LoadRDF
+        inputs:
+          type: xml
+          file: /home/d2shack/hackathon2/git/d2s-tools/kernelexperiments/datasets/eswc-2008-complete.rdf
+
+    - module:
+         name: largeGraph 
+         source: org.data2semantics.cat.modules.LargeGraphModule
+         inputs:
+           data: 
+             reference: load rdf.data  
+                
+
+                

@@ -52,6 +52,23 @@ extract_xls = {
             'description': 'Test python module extracting string from xls.'
         }
 
+huge_graph = {
+            'run from': '/home/d2shack/hackathon2/git/d2s-tools/complexity-analysis-tools/complexity-analysis-tools', 
+            'name': 'Huge graph', 
+            'description': 'Graphs measures that will work on huge graphs. Generally, these are linear in the number of edges.'
+        }
+
+large_graph = {
+            'run from': '/home/d2shack/hackathon2/git/d2s-tools/complexity-analysis-tools/complexity-analysis-tools', 
+            'name': 'Large graph', 
+            'description': 'Graph measures for large graphs. These methods are generally a low polynomial in the number of edges or vertices.'
+        }
+
+small_graph = {
+            'run from': '/home/d2shack/hackathon2/git/d2s-tools/complexity-analysis-tools/complexity-analysis-tools', 
+            'name': 'Small graph', 
+            'description': 'Similar to large graph plus global clustering coefficient, diameter, mean distance'
+        }
 
 workflows = {}
 workflows['compression'] = compression
@@ -59,6 +76,9 @@ workflows['rdf_compression'] = rdf_compression
 workflows['uri_partition'] = uri_partition
 workflows['adjacency'] = uri_partition
 workflows['extract_xls'] = extract_xls
+workflows['large_graph'] = large_graph 
+workflows['small_graph'] = small_graph 
+workflows['huge_graph'] = huge_graph 
  
 
 def applicable(mimetype):
@@ -72,6 +92,9 @@ def applicable(mimetype):
         list.append[('rdf_compression', workflows['rdf_compression']['name'], workflows['rdf_compression']['description'])]
         list.append[('uri_partition', workflows['uri_partition']['name'], workflows['uri_partition']['description'])]
         list.append[('adjacency', workflows['adjacency']['name'], workflows['adjacency']['description'])]
+        list.append[('large_graph', workflows['large_graph']['name'], workflows['large_graph']['description'])]
+        list.append[('small_graph', workflows['small_graph']['name'], workflows['small_graph']['description'])]
+        list.append[('huge_graph', workflows['huge_graph']['name'], workflows['huge_graph']['description'])]
 
     if(mimetype is 'application/xls' or mimetype is 'application/x-xls'):
         list.append[('extract_xls', workflows['extract_xls']['name'], workflows['extract_xls']['description'])]

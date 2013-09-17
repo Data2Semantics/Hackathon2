@@ -1,0 +1,22 @@
+workflow:
+
+   name: Huge Graph RDF Analysis  
+   
+   modules:
+
+    - module:
+        name: load rdf
+        source: org.data2semantics.cat.modules.LoadRDF
+        inputs:
+          type: xml
+          file: {0}
+
+    - module:
+         name: largeGraph 
+         source: org.data2semantics.cat.modules.HugeGraphModule
+         inputs:
+           data: 
+             reference: load rdf.data  
+                
+
+                

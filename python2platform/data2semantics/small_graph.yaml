@@ -1,0 +1,22 @@
+workflow:
+
+   name: Small Graph RDF Analysis  
+   
+   modules:
+
+    - module:
+        name: load rdf
+        source: org.data2semantics.cat.modules.LoadRDF
+        inputs:
+          type: xml
+          file: {0}
+
+    - module:
+         name: smallGraph 
+         source: org.data2semantics.cat.modules.SmallGraphModule
+         inputs:
+           data: 
+             reference: load rdf.data  
+                
+
+                

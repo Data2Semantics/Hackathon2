@@ -18,11 +18,12 @@ class GitRepository(Repository):
         
         self.url = url
         
-        git = sh.git.bake(_cwd=self.path)
+        git = sh.git.bake(_cwd=self.basedir)
         
         try:
-            git.clone(url,_cwd=self.path)
-        except Exception:
+            git.clone(url,_cwd=self.basedir)
+        except Exception as e:
+            print e
             print "Git repository was already cloned, should pull a new version, but will skip that for now"
             # git.pull(clone_url,_cwd=path)
             

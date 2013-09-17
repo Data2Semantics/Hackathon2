@@ -41,6 +41,9 @@ class GitRepository(Repository):
             
             mimetype = magic.from_file(p, mime=True)
             
+            if mimetype == "text/plain" and fn[-3:] == "ttl" :
+                mimetype = "text/turtle"    
+            
             if os.path.isdir(p) :
                 filetype = 'dir'
             else :

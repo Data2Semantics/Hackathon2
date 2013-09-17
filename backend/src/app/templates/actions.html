@@ -7,7 +7,7 @@
         <a id='runWorkflowBtn' class='workflow btn' name='{{ name }}' path='{{ path }}' identifier='{{ identifier }}'>Run</a>
         <a id="showResults" style="display:none;" class='workflow btn' href="" target="_blank">Show results</a>
         <a id="showProgress" style="display:none;" class='workflow btn' href="" target="_blank">Show progress</a>
-        
+        <a id="showProvenance" style="display:none;" class='workflow btn' href="#">Show Provenance</a>
     </div>
 {% endfor %}
 
@@ -21,14 +21,17 @@ function updateStatus(status) {
 		$("#runWorkflowBtn").html('Re-run');
 		$("#runWorkflowBtn").removeClass("disabled")
 		$("#showProgress").hide();
+		$("#showProvenance").show();
 	} else if (status == 'running') {
 		$("#runWorkflowBtn").addClass('disabled');
 		$("#showProgress").show();
+		$("#showProvenance").hide();
 	} else if (status == 'no workflow') {
 		$("#showResults").hide();
 		$("#runWorkflowBtn").html("Run");
 		$("#runWorkflowBtn").removeClass("disabled")
 		$("#showProgress").hide();
+		$("#showProvenance").show();
 	}
 }
 
@@ -38,7 +41,6 @@ function callUpdateStatus() {
 	var identifier = $('#runWorkflowBtn').attr("identifier");
 	var name = $('#runWorkflowBtn').attr("name");
 	var path = $('#runWorkflowBtn').attr("path");
-	console.log(path);
 	$.get('http://semweb.cs.vu.nl/hackathon/backend/workflow/status?path=' + encodeURIComponent(path) + '&name=' + encodeURIComponent(name) + '&workflowId=' + encodeURIComponent(identifier), function( jsonResult ) {
 		  updateStatus(jsonResult['status']);
 		});
@@ -64,6 +66,19 @@ $(function() {
     	
     	$(this).addClass('disabled');
         $("#showResults").show();
+        $("#showProvenance").show();
+    });
+	$('#showProvenance').on('click', function(){
+    	
+    	var identifier = $("#runWorkflowBtn").attr("identifier");
+		var path = $("#runWorkflowBtn").attr("path");
+		var name = $("#runWorkflowBtn").attr("name");
+    	$.get('{{ url_for("pushProvenanceResult") }}', {path : path, workflowId: identifier, name: name}, function( jsonResult ) {
+    			window.open("http://semweb.cs.vu.nl/provoviz?endpoint_uri=" + encodeURIComponent("http://semweb.cs.vu.nl:8080/openrdf-sesame/repositories/ct"), "_blank");
+	  		}
+    	
+    	);
+    	
     });
 });
 </script>

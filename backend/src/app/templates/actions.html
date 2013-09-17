@@ -1,84 +1,75 @@
 <h4>Possible Actions for '{{ name }}'</h4>
 
 {% for (identifier, wfname, description) in workflows %}
-    <div class='well'>
+    <div id='{{ identifier }} class='well'>
+
         <p><strong>{{ wfname }}</strong></p>
         <p>{{ description }}</p>
-        <a id='runWorkflowBtn' class='workflow btn' name='{{ name }}' path='{{ path }}' identifier='{{ identifier }}'>Run</a>
-        <a id="showResults" style="display:none;" class='workflow btn' href="" target="_blank">Show results</a>
-        <a id="showProgress" style="display:none;" class='workflow btn' href="" target="_blank">Show progress</a>
-        <a id="showProvenance" style="display:none;" class='workflow btn' href="#">Show Provenance</a>
+        <a id='{{ identifier }}runWorkflowBtn' onClick="runWorkflow(this);" class='workflow btn' name='{{ name }}' path='{{ path }}' identifier='{{ identifier }}'>Run</a>
+        <a id="{{ identifier }}showResults" style="display:none;" class='workflow btn' href="http://semweb.cs.vu.nl/hackathon/results/{{ path }}/{{ identifier }}/report/index.html" target="_blank">Show results</a>
+        <a id="{{ identifier }}showProgress" style="display:none;" class='workflow btn' href="" target="_blank">Show progress</a>
+        <a id="{{ identifier }}showProvenance" onClick="showProvenanceButton(this)" style="display:none;" class='workflow btn' href="#" name='{{ name }}' path='{{ path }}' identifier='{{ identifier }}'>Show Provenance</a>
     </div>
+    <script type="text/javascript">
+    console.log("bla0");
+    function {{ identifier }}updateStatus(status) {
+    	if (status == 'finished') {
+    		$("#{{ identifier }}showResults").show();
+    		$("#{{ identifier }}runWorkflowBtn").html('Re-run');
+    		$("#{{ identifier }}runWorkflowBtn").removeClass("disabled")
+    		$("#{{ identifier }}showProgress").hide();
+    		$("#{{ identifier }}showProvenance").show();
+    	} else if (status == 'running') {
+    		$("#{{ identifier }}runWorkflowBtn").addClass('disabled');
+    		$("#{{ identifier }}showProgress").show();
+    		$("#{{ identifier }}showProvenance").hide();
+    	} else if (status == 'no workflow') {
+    		$("#{{ identifier }}showResults").hide();
+    		$("#{{ identifier }}runWorkflowBtn").html("Run");
+    		$("#{{ identifier }}runWorkflowBtn").removeClass("disabled")
+    		$("#{{ identifier }}showProgress").hide();
+    		$("#{{ identifier }}showProvenance").show();
+    	}
+    }
+
+    function {{ identifier }}callUpdateStatus() {
+    	$.get('http://semweb.cs.vu.nl/hackathon/backend/workflow/status?path=' + encodeURIComponent("{{ path }}") + '&name=' + encodeURIComponent("{{ name }}") + '&workflowId=' + encodeURIComponent("{{ identifier }}"), function( jsonResult ) {
+    		{{ identifier }}updateStatus(jsonResult['status']);
+    		});
+    }
+    $(function() {
+    	{{ identifier }}callUpdateStatus();
+    });
+    </script>
 {% endfor %}
 
 <script>
 function basename(path) {
     return path.replace(/\\/g,'/').replace( /.*\//, '' );
 }
-function updateStatus(status) {
-	if (status == 'finished') {
-		$("#showResults").show();
-		$("#runWorkflowBtn").html('Re-run');
-		$("#runWorkflowBtn").removeClass("disabled")
-		$("#showProgress").hide();
-		$("#showProvenance").show();
-	} else if (status == 'running') {
-		$("#runWorkflowBtn").addClass('disabled');
-		$("#showProgress").show();
-		$("#showProvenance").hide();
-	} else if (status == 'no workflow') {
-		$("#showResults").hide();
-		$("#runWorkflowBtn").html("Run");
-		$("#runWorkflowBtn").removeClass("disabled")
-		$("#showProgress").hide();
-		$("#showProvenance").show();
-	}
+
+function runWorkflow(runWorkflowButton) {
+	var element = $(runWorkflowButton);
+	var identifier = element.attr("identifier");
+	var path = element.attr("path");
+	var name = element.attr("name");
+	$.get('{{ url_for("execWorkflow") }}', {path : path, workflowId: identifier, name: name});
+	
+	element.addClass('disabled');
+    $("#" + identifier + "showResults").show();
+    $("#" + identifier + "showProvenance").show();
 }
 
-function callUpdateStatus() {
-	console.log("callupdatestatus");
-	var path = $('#runWorkflowBtn').attr("path");
-	var identifier = $('#runWorkflowBtn').attr("identifier");
-	var name = $('#runWorkflowBtn').attr("name");
-	var path = $('#runWorkflowBtn').attr("path");
-	$.get('http://semweb.cs.vu.nl/hackathon/backend/workflow/status?path=' + encodeURIComponent(path) + '&name=' + encodeURIComponent(name) + '&workflowId=' + encodeURIComponent(identifier), function( jsonResult ) {
-		  updateStatus(jsonResult['status']);
-		});
-	console.log("callupdatestatus2");
+function showProvenanceButton(provenanceButton) {
+	var element = $(provenanceButton);
+	var identifier = element.attr("identifier");
+	var path = element.attr("path");
+	var name = element.attr("name");
+	$.get('{{ url_for("pushProvenanceResult") }}', {path : path, workflowId: identifier, name: name}, function( jsonResult ) {
+		window.open("http://semweb.cs.vu.nl/provoviz?endpoint_uri=" + encodeURIComponent("http://semweb.cs.vu.nl:8080/openrdf-sesame/repositories/ct"), "_blank");
+		}
+
+	);
 }
 
-function updateShowResultsHref() {
-	console.log("updateshowresultshref");
-	var identifier = $('#runWorkflowBtn').attr("identifier");
-	var path = $('#runWorkflowBtn').attr("path");
-	$("#showResults").attr("href","http://semweb.cs.vu.nl/hackathon/results/" + path + "/" + identifier + "/report/index.html");
-}
-
-$(function() {
-	updateShowResultsHref();
-	callUpdateStatus();
-    $('#runWorkflowBtn').on('click', function(){
-    	
-    	var identifier = $(this).attr("identifier");
-		var path = $(this).attr("path");
-		var name = $(this).attr("name");
-    	$.get('{{ url_for("execWorkflow") }}', {path : path, workflowId: identifier, name: name});
-    	
-    	$(this).addClass('disabled');
-        $("#showResults").show();
-        $("#showProvenance").show();
-    });
-	$('#showProvenance').on('click', function(){
-    	
-    	var identifier = $("#runWorkflowBtn").attr("identifier");
-		var path = $("#runWorkflowBtn").attr("path");
-		var name = $("#runWorkflowBtn").attr("name");
-    	$.get('{{ url_for("pushProvenanceResult") }}', {path : path, workflowId: identifier, name: name}, function( jsonResult ) {
-    			window.open("http://semweb.cs.vu.nl/provoviz?endpoint_uri=" + encodeURIComponent("http://semweb.cs.vu.nl:8080/openrdf-sesame/repositories/ct"), "_blank");
-	  		}
-    	
-    	);
-    	
-    });
-});
 </script>

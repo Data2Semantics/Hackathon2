@@ -87,8 +87,8 @@ def run(identifier, location, datafile):
       location: where to output the results of the workflow
       dataFile: which file to run the workflow on 
     ''' 
-    os.chdir(os.path.realpath(__file__))
-    
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
     # Read the workflow file into a string
     workflowFile = open('./'+identifier+'.yaml', 'r')
     workflowYAML = workflowFile.read()
@@ -101,9 +101,10 @@ def run(identifier, location, datafile):
     wfFileOut.write(workflowYAML)
     wfFileOut.close()
     
+    logFileOut = open(location+'/workflow.log', 'w')
     # Call the platform
     args = ["mvn", "exec:java", "-Dexec.mainClass=org.data2semantics.platform.run.Run", '-Dexec.args=--output {0} {0}/workflow.yaml'.format(location)]
-    sp.Popen(args, cwd=workflows[identifier]['run from']) # run in the background
+    sp.Popen(args, cwd=workflows[identifier]['run from'], stdout = logFileOut, stderr = logFileOut) # run in the background
     
 def status(location):
     '''

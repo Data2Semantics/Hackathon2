@@ -124,7 +124,7 @@ def pushProvenanceResult():
     path = request.args.get('path')
     name = request.args.get('name')
 
-    context = "<http://" + os.path.join(compression, name) + ">"
+    context = "<http://" + os.path.join(path, name) + ">"
     
     absolute_path = os.path.join(str(SCRATCH),str(path))
     results_path = os.path.join(os.path.join(str(WORKFLOW_RESULTS),str(path)),str(workflowId))

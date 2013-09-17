@@ -7,7 +7,6 @@ import python2platform as p2p
 
 from glob import glob
 import magic
-from util.gitrepository import GitRepository
 
 
 from app import app
@@ -15,7 +14,7 @@ from app import app
 
 GIT_SCRATCH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scratch')
 
-GIT_WORKFLOW_RESULTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results')
+GIT_WORKFLOW_RESULTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'workflowResults')
 
 
 @app.route('/github', methods=['GET'])
@@ -52,15 +51,24 @@ def github_clone():
     name = request.args.get('name','test')
     
     if clone_url :
-        git_repo = GitRepository(name)
         
-        g.set('repository', git_repo)
+        print clone_url
+        print name
+    
+        path = os.path.join(GIT_SCRATCH,name)
         
-        git_repo.initialize(clone_url)
+        print path
         
-        path = git_repo.path
+        git = sh.git.bake(_cwd=GIT_SCRATCH)
         
-        return jsonify({'name': name})
+        try:
+            git.clone(clone_url,_cwd=GIT_SCRATCH)
+        except Exception:
+            
+            print "Git repository was already cloned, should pull a new version, but will skip that for now"
+            # git.pull(clone_url,_cwd=path)
+        
+        return jsonify({'name': name, 'path': path})
         
     else :
         return 'error'
@@ -104,18 +112,31 @@ def execWorkflow():
     return jsonify({'results': True} )
     
     
+
 @app.route('/browse', methods=['GET'])
 def browse(path = None):
     if not path :
         path = request.args.get('path')
         
-    name = request.args.get('name')
-    if not name:
-        return "Error"
+    files = glob("{}/*".format(path))
     
-    git_repo = g.get('repository')
     
-    filelist, parent = git_repo.browse(path)
+    filelist = []
+    for p in files:
+        (pth, fn) = os.path.split(p)
+        
+        mimetype = magic.from_file(p, mime=True)
+        
+        if os.path.isdir(p) :
+            filetype = 'dir'
+        else :
+            filetype = 'file'
+        
+        print fn, mimetype
+        
+        filelist.append({'name': fn, 'path': p, 'mimetype': mimetype, 'type': filetype})
     
-    return jsonify({'parent': parent, 'path': path, 'files': filelist})
+    
+    return render_template('files.html', files=filelist)
+
 

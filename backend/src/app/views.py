@@ -94,7 +94,7 @@ def get_workflows():
 def execWorkflow():
     workflowId = request.args.get('workflowId')
     filePath = request.args.get('filePath')
-    resultsOutput = GIT_WORKFLOW_RESULTS + '/' + workflowId + os.path.basename(filePath)
+    resultsOutput = WORKFLOW_RESULTS + '/' + workflowId + os.path.basename(filePath)
     p2p.run(workflowId, resultsOutput, filePath)
     return jsonify({'results': True} )
     

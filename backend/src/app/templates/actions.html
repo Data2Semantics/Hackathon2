@@ -6,6 +6,7 @@
         <p>{{ description }}</p>
         <a id='runWorkflowBtn' class='workflow btn' path='{{ path }}' identifier='{{ identifier }}'>Run</a>
         <a id="showResults" style="display:none;" class='workflow btn' href="" target="_blank">Show results</a>
+        <a id="showProgress" style="display:none;" class='workflow btn' href="" target="_blank">Show progress</a>
         
     </div>
 {% endfor %}
@@ -14,16 +15,42 @@
 function basename(path) {
     return path.replace(/\\/g,'/').replace( /.*\//, '' );
 }
+function updateStatus(status) {
+	if (status == 'finished') {
+		$("#showResults").show();
+		$("#runWorkflowBtn").html('Re-run');
+		$("#runWorkflowBtn").removeClass("disabled")
+		$("#showProgress").hide();
+	} else if (status == 'running') {
+		$("#runWorkflowBtn").addClass('disabled');
+		$("#showProgress").show();
+	} else if (status == 'no workflow') {
+		$("#showResults").hide();
+		$("#runWorkflowBtn").html("Run");
+		$("#runWorkflowBtn").removeClass("disabled")
+		$("#showProgress").hide();
+	}
+}
+
+function callUpdateStatus() {
+	var workflowId = $('#runWorkflowBtn').attr("identifier");
+	$.get('http://semweb.cs.vu.nl/hackathon/backend/workflow/status?filePath=' + encodeURIComponent('{{ path }}') + '&workflowId=' + encodeURIComponent(workflowId), function( jsonResult ) {
+		  updateStatus(jsonResult['status']);
+		});
+}
+
+function updateShowResultsHref() {
+	var workflowId = $('#runWorkflowBtn').attr("identifier");
+	$("#showResults").attr("href","http://semweb.cs.vu.nl/hackathon/workflowResults/" + workflowId + basename('{{ path }}') + "/report/index.html");
+}
 $(function() {
-	
-	
+	updateShowResultsHref();
+	callUpdateStatus();
     $('#runWorkflowBtn').on('click', function(){
     	var workflowId = $(this).attr("identifier");
     	$.get('http://semweb.cs.vu.nl/hackathon/backend/workflow/exec?filePath=' + encodeURIComponent('{{ path }}') + '&workflowId=' + encodeURIComponent(workflowId));
     	
     	$(this).addClass('disabled');
-    	//first fix href link of button to show results
-    	$("#showResults").attr("href","http://semweb.cs.vu.nl/hackathon/workflowResults/" + workflowId + basename('{{ path }}') + "/report/index.html");
         $("#showResults").show();
     });
 });

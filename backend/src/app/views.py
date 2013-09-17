@@ -94,12 +94,20 @@ def get_workflows():
 def execWorkflow():
     workflowId = request.args.get('workflowId')
     filePath = request.args.get('filePath')
-    resultsOutput = WORKFLOW_RESULTS + '/' + workflowId + os.path.basename(filePath)
+    resultsOutput = getWorkflowLocation(workflowId, filePath)
     p2p.run(workflowId, resultsOutput, filePath)
     return jsonify({'results': True} )
     
-    
+@app.route('/workflow/status')
+def getWorkflowStatus():
+    workflowId = request.args.get('workflowId')
+    filePath = request.args.get('filePath')
+    location = getWorkflowLocation(workflowId, filePath)
+    return jsonify({'status': p2p.status(location)} )
 
+def getWorkflowLocation(workflowId, inputFilePath):
+    return GIT_WORKFLOW_RESULTS + '/' + workflowId + os.path.basename(inputFilePath)
+    
 @app.route('/browse', methods=['GET'])
 def browse():
     print "Browsing"

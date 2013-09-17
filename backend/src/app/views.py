@@ -5,17 +5,14 @@ import sh
 import os
 import python2platform as p2p
 
-from glob import glob
-import magic
+
 from util.gitrepository import GitRepository
 
 
-from app import app
+from app import app, SCRATCH, WORKFLOW_RESULTS
 
 
-GIT_SCRATCH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scratch')
 
-GIT_WORKFLOW_RESULTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'results')
 
 
 @app.route('/github', methods=['GET'])
@@ -52,18 +49,15 @@ def github_clone():
     name = request.args.get('name','test')
     
     if clone_url :
-        git_repo = GitRepository(name)
-        
-        g.set('repository', git_repo)
-        
+        git_repo = GitRepository(name)    
         git_repo.initialize(clone_url)
         
-        path = git_repo.path
+        response = jsonify({'name': name})
+        response.set_cookie('repository_name', git_repo.name)
         
-        return jsonify({'name': name})
-        
+        return response
     else :
-        return 'error'
+        return 'Error, no clone_url specified'
     
 @app.route('/progress', methods=['GET'])
 def progress_bar():
@@ -100,20 +94,24 @@ def get_workflows():
 def execWorkflow():
     workflowId = request.args.get('workflowId')
     filePath = request.args.get('filePath')
-    p2p.run(workflowId, GIT_WORKFLOW_RESULTS, filePath)
+    p2p.run(workflowId, WORKFLOW_RESULTS, filePath)
     return jsonify({'results': True} )
     
     
 @app.route('/browse', methods=['GET'])
-def browse(path = None):
+def browse():
+    print "Browsing"
+    path = request.args.get('path', None)
     if not path :
-        path = request.args.get('path')
+        raise Exception('Must specify a path!')
         
-    name = request.args.get('name')
-    if not name:
-        return "Error"
+    name = request.args.get('name', request.cookies.get('repository_name'))
     
-    git_repo = g.get('repository')
+    print '1', name, path
+    
+    git_repo = GitRepository(name)
+    
+    print '2', name, path
     
     filelist, parent = git_repo.browse(path)
     

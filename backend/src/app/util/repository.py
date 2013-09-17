@@ -1,11 +1,12 @@
 import os
-
+from app import SCRATCH
 
 class Repository(object):
     
-    BASEDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scratch')
+    BASEDIR = SCRATCH
     
-    basdir, name = ""
+    basdir = ""
+    name = ""
     initialized = False
     
     def __init__(self, name, basedir = BASEDIR):
@@ -16,6 +17,9 @@ class Repository(object):
             raise Exception("Basedir {} does not exist!".format(basedir))
         
         self.path = os.path.join(basedir, name)
+        
+        if os.path.exists(self.path):
+            self.initialized = True
                 
     
     def browse(self, path = None):

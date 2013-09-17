@@ -102,14 +102,14 @@
 	    
             $.get('{{ url_for("github_clone") }}', { clone_url: clone_url, name: name}, function(data){
                 var name = data.name;
-                var path = data.path;
+                var path = data.name;
 		
 		$('#repositories').hide();
                 $('#reposbreadcrumb').toggleClass('active');
                 $('#filebreadcrumb').toggleClass('active');
                 $('#filebreadcrumb').show();
                 
-		browse('#browse','#actions', path);
+		browse('#browse','#actions', path, name);
 		
 		$('#browse').show();
 		
@@ -120,10 +120,10 @@
     });
     
     
-    function browse(browsepane, actionpane, path) {
+    function browse(browsepane, actionpane, path, name) {
       // Retrieve JSON list of files
       
-      $.get('{{ url_for("browse") }}', {path: path}, function(data) {
+      $.get('{{ url_for("browse") }}', {path: path, name: name}, function(data) {
 	    var parent = data.parent;
 	    var files = data.files;
 	    
@@ -136,7 +136,7 @@
 	    if (parent != '') {
 		  var up = $('<a class="list-group-item"><span class="glyphicon glyphicon-folder-open"></span><span style="padding-left: 1em;">..</span></a>');
 		  up.on("click", function(e){
-			browse(browsepane, actionpane, parent);
+			browse(browsepane, actionpane, parent, name);
 		  });
 	    
 		  $(list).append(up);
@@ -159,7 +159,7 @@
 		  a.append(icon);
 		  a.append('<span style="padding-left: 1em;">' + value.name + '</span>');
 	          a.on('click', function(e){
-			browse(browsepane, actionpane, value.path);
+			browse(browsepane, actionpane, value.path, name);
 		  });
 		} else {
 		  var icon = $('<span class="glyphicon glyphicon-file"></span>');

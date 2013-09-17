@@ -5,16 +5,14 @@ import sh
 import os
 import python2platform as p2p
 
-from glob import glob
-import magic
+
+from util.gitrepository import GitRepository
 
 
-from app import app
+from app import app, SCRATCH, WORKFLOW_RESULTS
 
 
-GIT_SCRATCH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'scratch')
 
-GIT_WORKFLOW_RESULTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'workflowResults')
 
 
 @app.route('/github', methods=['GET'])
@@ -51,27 +49,15 @@ def github_clone():
     name = request.args.get('name','test')
     
     if clone_url :
+        git_repo = GitRepository(name)    
+        git_repo.initialize(clone_url)
         
-        print clone_url
-        print name
-    
-        path = os.path.join(GIT_SCRATCH,name)
+        response = jsonify({'name': name})
+        response.set_cookie('repository_name', git_repo.name)
         
-        print path
-        
-        git = sh.git.bake(_cwd=GIT_SCRATCH)
-        
-        try:
-            git.clone(clone_url,_cwd=GIT_SCRATCH)
-        except Exception:
-            
-            print "Git repository was already cloned, should pull a new version, but will skip that for now"
-            # git.pull(clone_url,_cwd=path)
-        
-        return jsonify({'name': name, 'path': path})
-        
+        return response
     else :
-        return 'error'
+        return 'Error, no clone_url specified'
     
 @app.route('/progress', methods=['GET'])
 def progress_bar():
@@ -108,36 +94,30 @@ def get_workflows():
 def execWorkflow():
     workflowId = request.args.get('workflowId')
     filePath = request.args.get('filePath')
-    resultsOutput = GIT_WORKFLOW_RESULTS + '/' + workflowId + os.path.basename(filePath)
+    resultsOutput = WORKFLOW_RESULTS + '/' + workflowId + os.path.basename(filePath)
     p2p.run(workflowId, resultsOutput, filePath)
     return jsonify({'results': True} )
     
     
 
 @app.route('/browse', methods=['GET'])
-def browse(path = None):
+def browse():
+    print "Browsing"
+    path = request.args.get('path', None)
     if not path :
-        path = request.args.get('path')
+        raise Exception('Must specify a path!')
         
-    files = glob("{}/*".format(path))
+    name = request.args.get('name', request.cookies.get('repository_name'))
+    
+    print '1', name, path
+    
+    git_repo = GitRepository(name)
+    
+    print '2', name, path
+    
+    filelist, parent = git_repo.browse(path)
     
     
-    filelist = []
-    for p in files:
-        (pth, fn) = os.path.split(p)
-        
-        mimetype = magic.from_file(p, mime=True)
-        
-        if os.path.isdir(p) :
-            filetype = 'dir'
-        else :
-            filetype = 'file'
-        
-        print fn, mimetype
-        
-        filelist.append({'name': fn, 'path': p, 'mimetype': mimetype, 'type': filetype})
-    
-    
-    return render_template('files.html', files=filelist)
+    return jsonify({'parent': parent, 'files': filelist})
 
 

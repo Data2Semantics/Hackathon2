@@ -4,7 +4,7 @@
     <div class='well'>
         <p><strong>{{ name }}</strong></p>
         <p>{{ description }}</p>
-        <a class='workflow btn' path='{{ path }}' identifier='{{ identifier }}'>Run</a>
+        <a id='runWorkflowBtn' class='workflow btn' path='{{ path }}' identifier='{{ identifier }}'>Run</a>
         <a id="showResults" style="display:none;" class='workflow btn' href="" target="_blank">Show results</a>
         
     </div>
@@ -17,13 +17,13 @@ function basename(path) {
 $(function() {
 	
 	
-    $('.workflow').on('click', function(){
+    $('#runWorkflowBtn').on('click', function(){
     	var workflowId = $(this).attr("identifier");
     	$.get('http://semweb.cs.vu.nl/hackathon/backend/workflow/exec?filePath=' + encodeURIComponent('{{ path }}') + '&workflowId=' + encodeURIComponent(workflowId));
     	
     	$(this).addClass('disabled');
     	//first fix href link of button to show results
-    	$("#showResults").attr("href","http://semweb.cs.vu.nl/hackathon/workflowResults/" + workflowId + basename('{{ path }}'));
+    	$("#showResults").attr("href","http://semweb.cs.vu.nl/hackathon/workflowResults/" + workflowId + basename('{{ path }}') + "/report/index.html");
         $("#showResults").show();
     });
 });

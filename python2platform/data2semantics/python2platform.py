@@ -88,7 +88,10 @@ def run(identifier, location, datafile):
       dataFile: which file to run the workflow on 
     ''' 
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
-
+    
+    
+    if not os.path.exists(location):
+        os.makedirs(location)
     # Read the workflow file into a string
     workflowFile = open('./'+identifier+'.yaml', 'r')
     workflowYAML = workflowFile.read()

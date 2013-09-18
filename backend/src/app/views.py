@@ -126,7 +126,7 @@ def upload_workflow_provenance():
     if r.ok :
         return jsonify({'status': 'true'} )
     else :
-        print r.text
+        print r
         return jsonify({'status': 'false'})
 
     

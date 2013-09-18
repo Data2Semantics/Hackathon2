@@ -8,7 +8,7 @@
         <a id='{{ w.id }}runWorkflowBtn' onClick="runWorkflow(this);" class='workflow btn' name='{{ name }}' path='{{ path }}' identifier='{{ w.id }}'>Run</a>
         <a id="{{ w.id }}showResults" style="display:none;" class='workflow btn' href="http://semweb.cs.vu.nl/hackathon/results/{{ path }}/{{ w.id }}/report/index.html" target="_blank">Show results</a>
         <a id="{{ w.id }}showProgress" style="display:none;" class='workflow btn' href="" target="_blank">Show progress</a>
-        <a id="{{ w.id }}showProvenance" onClick="showProvenanceButton(this)" style="display:none;" class='workflow btn' href="#" name='{{ name }}' path='{{ path }}' identifier='{{ w.id }}'>Show Provenance</a>
+        <a id="{{ w.id }}showProvenance" onClick="showProvenance(this)" style="display:none;" class='workflow btn' href="#" name='{{ name }}' path='{{ path }}' identifier='{{ w.id }}'>Show Provenance</a>
     </div>
     <script type="text/javascript">
     function {{ w.id }}updateStatus(status) {
@@ -60,13 +60,19 @@ function runWorkflow(runWorkflowButton) {
 	$("#" + identifier + "showProvenance").show();
 }
 
-function showProvenanceButton(provenanceButton) {
+function showProvenance(provenanceButton) {
 	var element = $(provenanceButton);
 	var identifier = element.attr("identifier");
 	var path = element.attr("path");
 	var name = element.attr("name");
 	$.get('{{ url_for("upload_workflow_provenance") }}', {path : path, identifier: identifier, name: name}, function( data ) {
-	    var endpoint_uri = encodeURIComponent("http://semweb.cs.vu.nl:8080/openrdf-sesame/repositories/ct")
+		if (data.status == 'false') {
+			console.log("Something went wrong while uploading the workflow provenance to sesame.");
+		} else {
+			console.log("Everything went very well.");
+		}
+		
+	    var endpoint_uri = encodeURIComponent("http://semweb.cs.vu.nl:8080/openrdf-sesame/repositories/ct");
 	    
 	    window.open("http://semweb.cs.vu.nl/provoviz?endpoint_uri=" + endpoint_uri, "_blank");
 	});

@@ -1,12 +1,12 @@
 {% extends 'github.html' %}
 {% block repositories %}
 <div id='repositories'>
-    <h4>Repositories by {{ username }}</h4>
+    <h4>Datasets by {{ username }}</h4>
     <div style='height: 400px; overflow: auto;'>
         <div class='list-group'>
-        {% for r in repos|sort(attribute='name') %}
+        {% for d in datasets|sort(attribute='name') %}
         
-            <a class='list-group-item repository' clone_url='{{r.clone_url}}' name='{{ r.name }}'"><span class='glyphicon glyphicon-cloud'></span><span style="padding-left: 1em;">{{r.name}}</span></a>
+            <a class='list-group-item repository' clone_url='{{d.url}}' name='{{ d.name }}'"><span class='glyphicon glyphicon-cloud'></span><span style="padding-left: 1em;">{{d.name}}</span></a>
             
         {% endfor %}
         </div>

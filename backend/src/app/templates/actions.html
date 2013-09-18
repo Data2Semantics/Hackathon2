@@ -1,44 +1,44 @@
 <h4>Possible Actions for '{{ name }}'</h4>
 
-{% for (identifier, wfname, description) in workflows %}
-    <div id='{{ identifier }}' class='well'>
+{% for w in workflows %}
+    <div id='{{ w.id }}' class='well'>
 
-        <p><strong>{{ wfname }}</strong></p>
-        <p>{{ description }}</p>
-        <a id='{{ identifier }}runWorkflowBtn' onClick="runWorkflow(this);" class='workflow btn' name='{{ name }}' path='{{ path }}' identifier='{{ identifier }}'>Run</a>
-        <a id="{{ identifier }}showResults" style="display:none;" class='workflow btn' href="http://semweb.cs.vu.nl/hackathon/results/{{ path }}/{{ identifier }}/report/index.html" target="_blank">Show results</a>
-        <a id="{{ identifier }}showProgress" style="display:none;" class='workflow btn' href="" target="_blank">Show progress</a>
-        <a id="{{ identifier }}showProvenance" onClick="showProvenanceButton(this)" style="display:none;" class='workflow btn' href="#" name='{{ name }}' path='{{ path }}' identifier='{{ identifier }}'>Show Provenance</a>
+        <p><strong>{{ w.name }}</strong></p>
+        <p>{{ w.description }}</p>
+        <a id='{{ w.id }}runWorkflowBtn' onClick="runWorkflow(this);" class='workflow btn' name='{{ name }}' path='{{ path }}' identifier='{{ w.id }}'>Run</a>
+        <a id="{{ w.id }}showResults" style="display:none;" class='workflow btn' href="http://semweb.cs.vu.nl/hackathon/results/{{ path }}/{{ w.id }}/report/index.html" target="_blank">Show results</a>
+        <a id="{{ w.id }}showProgress" style="display:none;" class='workflow btn' href="" target="_blank">Show progress</a>
+        <a id="{{ w.id }}showProvenance" onClick="showProvenanceButton(this)" style="display:none;" class='workflow btn' href="#" name='{{ name }}' path='{{ path }}' identifier='{{ w.id }}'>Show Provenance</a>
     </div>
     <script type="text/javascript">
     console.log("bla0");
-    function {{ identifier }}updateStatus(status) {
+    function {{ w.id }}updateStatus(status) {
     	if (status == 'finished') {
-    		$("#{{ identifier }}showResults").show();
-    		$("#{{ identifier }}runWorkflowBtn").html('Re-run');
-    		$("#{{ identifier }}runWorkflowBtn").removeClass("disabled")
-    		$("#{{ identifier }}showProgress").hide();
-    		$("#{{ identifier }}showProvenance").show();
+    		$("#{{ w.id }}showResults").show();
+    		$("#{{ w.id }}runWorkflowBtn").html('Re-run');
+    		$("#{{ w.id }}runWorkflowBtn").removeClass("disabled")
+    		$("#{{ w.id }}showProgress").hide();
+    		$("#{{ w.id }}showProvenance").show();
     	} else if (status == 'running') {
-    		$("#{{ identifier }}runWorkflowBtn").addClass('disabled');
-    		$("#{{ identifier }}showProgress").show();
-    		$("#{{ identifier }}showProvenance").hide();
+    		$("#{{ w.id }}runWorkflowBtn").addClass('disabled');
+    		$("#{{ w.id }}showProgress").show();
+    		$("#{{ w.id }}showProvenance").hide();
     	} else if (status == 'no workflow') {
-    		$("#{{ identifier }}showResults").hide();
-    		$("#{{ identifier }}runWorkflowBtn").html("Run");
-    		$("#{{ identifier }}runWorkflowBtn").removeClass("disabled")
-    		$("#{{ identifier }}showProgress").hide();
-    		$("#{{ identifier }}showProvenance").show();
+    		$("#{{ w.id }}showResults").hide();
+    		$("#{{ w.id }}runWorkflowBtn").html("Run");
+    		$("#{{ w.id }}runWorkflowBtn").removeClass("disabled")
+    		$("#{{ w.id }}showProgress").hide();
+    		$("#{{ w.id }}showProvenance").show();
     	}
     }
 
-    function {{ identifier }}callUpdateStatus() {
-    	$.get('http://semweb.cs.vu.nl/hackathon/backend/workflow/status?path=' + encodeURIComponent("{{ path }}") + '&name=' + encodeURIComponent("{{ name }}") + '&workflowId=' + encodeURIComponent("{{ identifier }}"), function( jsonResult ) {
-    		{{ identifier }}updateStatus(jsonResult['status']);
+    function {{ w.id }}callUpdateStatus() {
+    	$.get('http://semweb.cs.vu.nl/hackathon/backend/workflow/status?path=' + encodeURIComponent("{{ path }}") + '&name=' + encodeURIComponent("{{ name }}") + '&workflowId=' + encodeURIComponent("{{ w.id }}"), function( jsonResult ) {
+    		{{ w.id }}updateStatus(jsonResult['status']);
     		});
     }
     $(function() {
-    	{{ identifier }}callUpdateStatus();
+    	{{ w.id }}callUpdateStatus();
     });
     </script>
 {% endfor %}

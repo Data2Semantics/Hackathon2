@@ -19,89 +19,26 @@ The expected procedure is something like this:
 
 import subprocess as sp
 import os
+import yaml
 
 # The directory of the platform's pom.xml
 PLATFORM_DIR = "/home/d2shack/hackathon2/git/d2s-tools/d2s-platform"
 
-compression = {
-            'run from': '/home/d2shack/hackathon2/git/d2s-tools/complexity-analysis-tools/complexity-analysis-tools', 
-            'name': 'Compression', 
-            'description': 'Computes the compressed and uncompressed size. The compressed size of the data servers as an upper bound for the amount of information it contains.'
-        }
-rdf_compression = {
-            'run from': '/home/d2shack/hackathon2/git/d2s-tools/RDFmodel', 
-            'name': 'RDF Compression', 
-            'description': 'Computes the size of an RDF dataset under a specialized model.'
-        }
-
-uri_partition = {
-            'run from': '/home/d2shack/hackathon2/git/d2s-tools/RDFmodel', 
-            'name': 'URI Partitioning', 
-            'description': 'Analyzes the URIs in the data and partitions them into functional units.'
-        }
-
-adjacency = {
-            'run from': '/home/d2shack/hackathon2/git/d2s-tools/complexity-analysis-tools/complexity-analysis-tools', 
-            'name': 'Adjacency Matrices', 
-            'description': 'Creates density plots of the adjacency matrix of the data, for a variety of orderings.'
-        }
-
-extract_xls = {
-            'run from': '/home/d2shack/hackathon2/git/d2s-tools/RDFmodel', 
-            'name': 'Extract XLS string', 
-            'description': 'Test python module extracting string from xls.'
-        }
-
-huge_graph = {
-            'run from': '/home/d2shack/hackathon2/git/d2s-tools/complexity-analysis-tools/complexity-analysis-tools', 
-            'name': 'Huge graph', 
-            'description': 'Graphs measures that will work on huge graphs. Generally, these are linear in the number of edges.'
-        }
-
-large_graph = {
-            'run from': '/home/d2shack/hackathon2/git/d2s-tools/complexity-analysis-tools/complexity-analysis-tools', 
-            'name': 'Large graph', 
-            'description': 'Graph measures for large graphs. These methods are generally a low polynomial in the number of edges or vertices.'
-        }
-
-small_graph = {
-            'run from': '/home/d2shack/hackathon2/git/d2s-tools/complexity-analysis-tools/complexity-analysis-tools', 
-            'name': 'Small graph', 
-            'description': 'Similar to large graph plus global clustering coefficient, diameter, mean distance'
-        }
-
-workflows = {}
-workflows['compression'] = compression
-workflows['rdf_compression'] = rdf_compression
-workflows['uri_partition'] = uri_partition
-workflows['adjacency'] = uri_partition
-workflows['extract_xls'] = extract_xls
-workflows['large_graph'] = large_graph 
-workflows['small_graph'] = small_graph 
-workflows['huge_graph'] = huge_graph 
+WORKFLOW_CONFIG = os.path.join(os.path.dirname(__file__),"workflows.yaml")
  
 
-def applicable(mimetype):
+def get_applicable_workflows(mimetype):
     '''
       Return a list of descriptors of workflows. Each entry is a triple of the 
       form: (identifier, human-readable name, description)
     '''
-    list = [('compression', workflows['compression']['name'], workflows['compression']['description'])]
     
-    if(mimetype == 'text/turtle' or mimetype == 'application/rdf+xml'):
-        list.append(('rdf_compression', workflows['rdf_compression']['name'], workflows['rdf_compression']['description']))
-        list.append(('uri_partition', workflows['uri_partition']['name'], workflows['uri_partition']['description']))
-        
-    if(mimetype == 'text/turtle'):
-        list.append(('adjacency', workflows['adjacency']['name'], workflows['adjacency']['description']))
-        list.append(('large_graph', workflows['large_graph']['name'], workflows['large_graph']['description']))
-        list.append(('small_graph', workflows['small_graph']['name'], workflows['small_graph']['description']))
-        list.append(('huge_graph', workflows['huge_graph']['name'], workflows['huge_graph']['description']))
-
-    if(mimetype == 'application/xls' or mimetype == 'application/x-xls'):
-        list.append(('extract_xls', workflows['extract_xls']['name'], workflows['extract_xls']['description']))
-
-    return list
+    workflows = yaml.load(open(WORKFLOW_CONFIG,'r'))
+    
+    ## Select those workflows which have the specified mimetype listed 
+    applicable_workflows = [wf for wf in workflows if ('any' in wf['mimetypes'] or mimetype in wf['mimetypes'])]
+    
+    return applicable_workflows
 
 def run(identifier, location, datafile):
     '''

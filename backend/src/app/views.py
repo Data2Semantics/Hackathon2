@@ -65,24 +65,11 @@ def actions():
     path = request.args.get('path')
     name = request.args.get('name')
     
-    workflows = p2p.applicable(mimetype)
+    workflows = p2p.get_applicable_workflows(mimetype)
     
     return render_template('actions.html', name=name, path=path, mimetype=mimetype, workflows=workflows)
 
-  
-@app.route('/workflow/getList', methods=['GET'])
-def get_workflows():
-    mimeType = request.args.get('mimeType')
-    #mimeType = 'text/turtle'
-    
-    workflows = p2p.applicable(mimeType)
-    
-    #realpath = os.path.realpath(__file__)
-    #currentDir = os.path.dirname(realpath)
-    #files = glob("{}/*".format(currentDir + '/../../../python2platform/data2semantics/python2platform.py'))
-    #files = glob("{}/*".format(path))
-#     return ', '.join(workflows)
-    return jsonify({'results': workflows} )    
+   
 
 @app.route('/workflow/exec')
 def execWorkflow():

@@ -14,12 +14,13 @@
     function {{ w.id }}updateStatus(status) {
     	if (status == 'finished') {
     		$("#{{ w.id }}showResults").show();
-    		$("#{{ w.id }}runWorkflowBtn").html('Re-run');
+    		$("#{{ w.id }}runWorkflowBtn").html('Run Again');
     		$("#{{ w.id }}runWorkflowBtn").removeClass("disabled")
     		$("#{{ w.id }}showProgress").hide();
     		$("#{{ w.id }}showProvenance").show();
     	} else if (status == 'running') {
     		$("#{{ w.id }}runWorkflowBtn").addClass('disabled');
+			$("#{{ w.id }}runWorkflowBtn").html('Running...');
     		$("#{{ w.id }}showProgress").show();
     		$("#{{ w.id }}showProvenance").hide();
     	} else if (status == 'no workflow') {

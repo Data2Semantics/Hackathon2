@@ -8,14 +8,14 @@
         <a id='{{ w.id }}runWorkflowBtn' onClick="runWorkflow(this);" class='workflow btn btn-default' name='{{ name }}' path='{{ path }}' identifier='{{ w.id }}'>Run</a>
         <a id="{{ w.id }}showResults" style="display:none;" class='workflow btn btn-default' href="http://semweb.cs.vu.nl/hackathon/results/{{ path }}/{{ w.id }}/report/index.html" target="_blank">Show results</a>
         <a id="{{ w.id }}showProgress" style="display:none;" class='workflow btn btn-default' href="" target="_blank">Show progress</a>
-        <a id="{{ w.id }}showProvenance" onClick="showProvenance(this)" style="display:none;" class='workflow btn' href="#" name='{{ name }}' path='{{ path }}' identifier='{{ w.id }}'>Show Provenance</a>
+        <a id="{{ w.id }}showProvenance" onClick="showProvenance(this)" style="display:none;" class='workflow btn btn-default' href="#" name='{{ name }}' path='{{ path }}' identifier='{{ w.id }}'>Show Provenance</a>
     </div>
     <script type="text/javascript">
     function {{ w.id }}updateStatus(status) {
     	if (status == 'finished') {
     		$("#{{ w.id }}showResults").show();
     		$("#{{ w.id }}runWorkflowBtn").html('Run Again');
-    		$("#{{ w.id }}runWorkflowBtn").removeClass("disabled")
+    		$("#{{ w.id }}runWorkflowBtn").removeClass("disabled");
     		$("#{{ w.id }}showProgress").hide();
     		$("#{{ w.id }}showProvenance").show();
     	} else if (status == 'running') {
@@ -26,7 +26,7 @@
     	} else if (status == 'no workflow') {
     		$("#{{ w.id }}showResults").hide();
     		$("#{{ w.id }}runWorkflowBtn").html("Run");
-    		$("#{{ w.id }}runWorkflowBtn").removeClass("disabled")
+    		$("#{{ w.id }}runWorkflowBtn").removeClass("disabled");
     		$("#{{ w.id }}showProgress").hide();
     		$("#{{ w.id }}showProvenance").show();
     	}
@@ -57,6 +57,7 @@ function runWorkflow(runWorkflowButton) {
 	$.get('{{ url_for("run_workflow") }}', {path : path, identifier: identifier, name: name});
 	
 	element.addClass('disabled');
+	element.html('Running...');
 	$("#" + identifier + "showResults").show();
 	$("#" + identifier + "showProvenance").show();
 }

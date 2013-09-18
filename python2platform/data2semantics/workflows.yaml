@@ -33,7 +33,7 @@
     id:             extract_xls
     name:           Extract XLS string
     description:    Test python module extracting string from xls.
-    basedir:        /home/d2shack/hackathon2/git/d2s-tools/RDFmodel
+    basedir:        /home/d2shack/hackathon2/git/d2s-tools/d2s-platform
     mimetypes:
         - application/vnd.ms-excel
 - 

@@ -1,10 +1,41 @@
-from repository import Repository
+import os
+from app import SCRATCH
 import sh
 import os
 from glob import glob
 import magic
 
-class GitRepository(Repository):
+class Dataset(object):
+    
+    BASEDIR = SCRATCH
+    
+    basdir = ""
+    name = ""
+    initialized = False
+    
+    def __init__(self, name, basedir = BASEDIR):
+        self.basedir = basedir
+        self.name = name     
+        
+        if not(os.path.exists(basedir)):
+            raise Exception("Basedir {} does not exist!".format(basedir))
+        
+        self.path = os.path.join(basedir, name)
+        
+        if os.path.exists(self.path):
+            self.initialized = True
+                
+    
+    def browse(self, path = None):
+        pass
+    
+
+    
+    
+    
+
+
+class GitDataset(Dataset):
     
     
     
@@ -53,17 +84,14 @@ class GitRepository(Repository):
             relative_p = os.path.relpath(p, self.basedir)
             
             filelist.append({'name': fn, 'path': relative_p, 'mimetype': mimetype, 'type': filetype})
-            
+        
         
         absolute_parent = os.path.abspath(os.path.join(absolute_path, os.pardir))
         relative_parent = os.path.relpath(absolute_parent,self.basedir)
         
-        if absolute_parent == self.path or '..' in relative_parent or relative_parent == '.' :
+        if absolute_parent == os.path.dirname(self.path) or '..' in relative_parent or relative_parent == '.' :
+            print absolute_parent, relative_parent
             relative_parent = ''
-            
+        
         
         return filelist, relative_parent
-    
-    
-        
-    

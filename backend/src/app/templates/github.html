@@ -58,9 +58,9 @@
 		<div class="row">
 			<div class="col-md-12">
 				<ol class="breadcrumb">
-					<li><a href="index.html">Data source selection</a></li>
-					<li class="active" id="reposbreadcrumb">Repository Selection</li>
-					<li id="filebreadcrumb">File Selection</li>
+					<li><a href="index.html">Repository Selection</a></li>
+					<li class="active" id="reposbreadcrumb"><a>Dataset Selection</a></li>
+					<li id="filebreadcrumb"><a>File Selection</a></li>
 	
 				</ol>
 			</div>
@@ -105,15 +105,17 @@
                 var path = data.name;
 		
 		$('#repositories').hide();
+		
                 $('#reposbreadcrumb').toggleClass('active');
                 $('#filebreadcrumb').toggleClass('active');
                 $('#filebreadcrumb').show();
                 
 		browse('#browse','#actions', path, name);
 		
+		console.log("Showing #browse");
 		$('#browse').show();
 		
-		console.log("Now showed browse for the first time");
+		console.log("Now showed #browse for the first time");
                 
             });
         });
@@ -130,6 +132,18 @@
 	    // Clear the DIV containing the file browser.
 	    $(browsepane).empty();
 	    
+	    var heading = $('<h4></h4>');
+	    
+	    if (path.length < 50) {
+		  heading.append(path);
+	    } else {
+		  heading.append(path.substring(0,10) + '...' + path.substring(path.length-40));
+	    }
+	    
+	    
+	    $(browsepane).append(heading);
+	    
+	    
 	    var list = $('<div></div>');
 	    list.toggleClass('list-group');
 	    
@@ -145,6 +159,8 @@
 	    
 	    
 	    $.each(files, function(index, value) {
+	        console.log(value);
+		
 		var a = $('<a></a>');
 		
 		a.toggleClass('list-group-item');

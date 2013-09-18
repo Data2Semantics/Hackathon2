@@ -6,7 +6,7 @@ import os
 import python2platform as p2p
 
 
-from util.gitrepository import GitRepository
+from util.dataset import GitDataset
 
 
 from app import app, SCRATCH, WORKFLOW_RESULTS
@@ -34,7 +34,6 @@ def github():
         
         repos = json.loads(r.text or r.content)
         
-        
         return render_template('github_repositories.html', type=calltype, username=username, repos=repos)
         
         
@@ -49,11 +48,11 @@ def github_clone():
     name = request.args.get('name','test')
     
     if clone_url :
-        git_repo = GitRepository(name)    
-        git_repo.initialize(clone_url)
+        git_dataset = GitDataset(name)    
+        git_dataset.initialize(clone_url)
         
         response = jsonify({'name': name})
-        response.set_cookie('repository_name', git_repo.name)
+        response.set_cookie('repository_name', git_dataset.name)
         
         return response
     else :
@@ -156,11 +155,11 @@ def browse():
     
     print '1', name, path
     
-    git_repo = GitRepository(name)
+    git_dataset = GitDataset(name)
     
     print '2', name, path
     
-    filelist, parent = git_repo.browse(path)
+    filelist, parent = git_dataset.browse(path)
     
     
     return jsonify({'parent': parent, 'files': filelist})

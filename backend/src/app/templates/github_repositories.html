@@ -2,13 +2,15 @@
 {% block repositories %}
 <div id='repositories'>
     <h4>Repositories by {{ username }}</h4>
-    <ul>
-    {% for r in repos %}
-    
-        <li><a class='repository' clone_url='{{r.clone_url}}' name='{{ r.name }}'">{{r.name}}</a></li>
+    <div style='height: 400px; overflow: auto;'>
+        <div class='list-group'>
+        {% for r in repos|sort(attribute='name') %}
         
-    {% endfor %}
-    </ul>
+            <a class='list-group-item repository' clone_url='{{r.clone_url}}' name='{{ r.name }}'"><span class='glyphicon glyphicon-cloud'></span><span style="padding-left: 1em;">{{r.name}}</span></a>
+            
+        {% endfor %}
+        </div>
+    </div>
 </div>
 
 

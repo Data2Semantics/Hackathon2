@@ -71,58 +71,65 @@ def actions():
 
    
 
-@app.route('/workflow/exec')
-def execWorkflow():
-    workflowId = request.args.get('workflowId')
+@app.route('/workflow/run')
+def run_workflow():
+    identifier = request.args.get('identifier')
     path = request.args.get('path')
     name = request.args.get('name')
     
     absolute_path = os.path.join(SCRATCH,path)
     
-    results_path = os.path.join(os.path.join(WORKFLOW_RESULTS,path),workflowId)
+    results_path = os.path.join(os.path.join(WORKFLOW_RESULTS,path),identifier)
     
-    p2p.run(workflowId, results_path, absolute_path)
+    p2p.run(identifier, results_path, absolute_path)
     return jsonify({'results': True} )
     
 @app.route('/workflow/status')
-def getWorkflowStatus():
-    workflowId = request.args.get('workflowId')
+def get_workflow_status():
+    identifier = request.args.get('identifier')
     path = request.args.get('path')
     name = request.args.get('name')
     
     absolute_path = os.path.join(SCRATCH,path)
     
-    results_path = os.path.join(os.path.join(WORKFLOW_RESULTS,path),workflowId)
+    results_path = os.path.join(os.path.join(WORKFLOW_RESULTS,path),identifier)
     return jsonify({'status': p2p.status(results_path)} )
 
 
-import httplib
+@app.route('/workflow/provenance')
+def upload_workflow_provenance():
 
-@app.route('/workflow/push')
-def pushProvenanceResult():
-
-    workflowId = request.args.get('workflowId')
+    identifier = request.args.get('identifier')
     path = request.args.get('path')
     name = request.args.get('name')
 
     context = "<http://" + os.path.join(path, name) + ">"
     
-    absolute_path = os.path.join(str(SCRATCH),str(path))
-    results_path = os.path.join(os.path.join(str(WORKFLOW_RESULTS),str(path)),str(workflowId))
+    absolute_path = os.path.join(SCRATCH,path)
+    results_path = os.path.join(os.path.join(WORKFLOW_RESULTS,path),identifier)
   
-    prov_filename = os.path.join(os.path.join(str(results_path), "prov"),"prov-o.ttl")
-    prov_file = open(prov_filename)
-    prov_data = prov_file.read()
-
-    connection =  httplib.HTTPConnection('semweb.cs.vu.nl:8080')
-
-    connection.request('PUT', '/openrdf-sesame/repositories/ct/statements?context='+context, prov_data, headers =  {'content-type':'text/turtle;charset=UTF-8'})
-
-    result = connection.getresponse()
+    prov_filename = os.path.join(os.path.join(results_path, "prov"),name)
     
+    prov_file = open(prov_filename, 'r')
+    prov_data = prov_file.read()
     prov_file.close()
 
-    return jsonify({'status': 'true'} )
+
+    headers =  {'content-type':'text/turtle;charset=UTF-8'}
+    params = {'context': context}
+
+    r = requests.put('http://semweb.cs.vu.nl:8080/openrdf-sesame/repositories/ct/statements',
+                     data = prov_data,
+                     params = params,
+                     headers = headers)
+    
+    if r.ok :
+        return jsonify({'status': 'true'} )
+    else :
+        print r.text
+        return jsonify({'status': 'false'})
+
+    
 
 
     

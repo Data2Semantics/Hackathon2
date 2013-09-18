@@ -11,7 +11,6 @@
         <a id="{{ w.id }}showProvenance" onClick="showProvenanceButton(this)" style="display:none;" class='workflow btn' href="#" name='{{ name }}' path='{{ path }}' identifier='{{ w.id }}'>Show Provenance</a>
     </div>
     <script type="text/javascript">
-    console.log("bla0");
     function {{ w.id }}updateStatus(status) {
     	if (status == 'finished') {
     		$("#{{ w.id }}showResults").show();
@@ -33,10 +32,11 @@
     }
 
     function {{ w.id }}callUpdateStatus() {
-    	$.get('http://semweb.cs.vu.nl/hackathon/backend/workflow/status?path=' + encodeURIComponent("{{ path }}") + '&name=' + encodeURIComponent("{{ name }}") + '&workflowId=' + encodeURIComponent("{{ w.id }}"), function( jsonResult ) {
-    		{{ w.id }}updateStatus(jsonResult['status']);
-    		});
+    	$.get('{{ url_for("get_workflow_status") }}', {path: '{{ path }}', name: '{{name}}', identifier: '{{w.id}}' }, function( data ) {
+    	    {{ w.id }}updateStatus(data.status);
+    	});
     }
+    
     $(function() {
     	{{ w.id }}callUpdateStatus();
     });
@@ -53,11 +53,11 @@ function runWorkflow(runWorkflowButton) {
 	var identifier = element.attr("identifier");
 	var path = element.attr("path");
 	var name = element.attr("name");
-	$.get('{{ url_for("execWorkflow") }}', {path : path, workflowId: identifier, name: name});
+	$.get('{{ url_for("run_workflow") }}', {path : path, identifier: identifier, name: name});
 	
 	element.addClass('disabled');
-    $("#" + identifier + "showResults").show();
-    $("#" + identifier + "showProvenance").show();
+	$("#" + identifier + "showResults").show();
+	$("#" + identifier + "showProvenance").show();
 }
 
 function showProvenanceButton(provenanceButton) {
@@ -65,11 +65,11 @@ function showProvenanceButton(provenanceButton) {
 	var identifier = element.attr("identifier");
 	var path = element.attr("path");
 	var name = element.attr("name");
-	$.get('{{ url_for("pushProvenanceResult") }}', {path : path, workflowId: identifier, name: name}, function( jsonResult ) {
-		window.open("http://semweb.cs.vu.nl/provoviz?endpoint_uri=" + encodeURIComponent("http://semweb.cs.vu.nl:8080/openrdf-sesame/repositories/ct"), "_blank");
-		}
-
-	);
+	$.get('{{ url_for("upload_workflow_provenance") }}', {path : path, identifier: identifier, name: name}, function( data ) {
+	    var endpoint_uri = encodeURIComponent("http://semweb.cs.vu.nl:8080/openrdf-sesame/repositories/ct")
+	    
+	    window.open("http://semweb.cs.vu.nl/provoviz?endpoint_uri=" + endpoint_uri, "_blank");
+	});
 }
 
 </script>

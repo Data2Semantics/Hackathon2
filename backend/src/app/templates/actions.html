@@ -75,7 +75,7 @@ function showProvenance(provenanceButton) {
 			element.addClass('btn-danger');
 		} else {
 			console.log("Everything went very well.");
-			var endpoint_uri = encodeURIComponent("http://semweb.cs.vu.nl:8080/openrdf-sesame/repositories/ct");
+			var endpoint_uri = encodeURIComponent("http://semweb.cs.vu.nl:8080/openrdf-sesame/repositories/goldendemo");
 			element.addClass('btn-success');
 			window.open("http://semweb.cs.vu.nl/provoviz?endpoint_uri=" + endpoint_uri, "_blank");
 		}

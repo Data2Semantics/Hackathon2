@@ -117,7 +117,7 @@ def upload_workflow_provenance():
     headers =  {'content-type':'text/turtle;charset=UTF-8'}
     params = {'context': context}
 
-    r = requests.put('http://semweb.cs.vu.nl:8080/openrdf-sesame/repositories/ct/statements',
+    r = requests.put('http://semweb.cs.vu.nl:8080/openrdf-sesame/repositories/goldendemo/statements',
                      data = prov_data,
                      params = params,
                      headers = headers)

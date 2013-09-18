@@ -49,7 +49,7 @@ def run(identifier, location, datafile):
       dataFile: which file to run the workflow on 
     '''
     
-    identified_workflows = [wf for wf in workflows if wf['identifier'] == identifier ]
+    identified_workflows = [wf for wf in workflows if wf['id'] == identifier ]
     
     if len(identified_workflows) == 0 :
         raise Exception("No matching workflows found")

@@ -26,15 +26,14 @@ PLATFORM_DIR = "/home/d2shack/hackathon2/git/d2s-tools/d2s-platform"
 
 WORKFLOW_CONFIG = os.path.join(os.path.dirname(__file__),"workflows.yaml")
  
+workflows = yaml.load(open(WORKFLOW_CONFIG,'r'))
 
 def get_applicable_workflows(mimetype):
     '''
       Return a list of descriptors of workflows. Each entry is a triple of the 
       form: (identifier, human-readable name, description)
     '''
-    
-    workflows = yaml.load(open(WORKFLOW_CONFIG,'r'))
-    
+
     ## Select those workflows which have the specified mimetype listed 
     applicable_workflows = [wf for wf in workflows if ('any' in wf['mimetypes'] or mimetype in wf['mimetypes'])]
     
@@ -48,12 +47,23 @@ def run(identifier, location, datafile):
       identifier: the string identifier for the workflow to run
       location: where to output the results of the workflow
       dataFile: which file to run the workflow on 
-    ''' 
+    '''
+    
+    identified_workflows = [wf for wf in workflows if wf['identifier'] == identifier ]
+    
+    if len(identified_workflows) == 0 :
+        raise Exception("No matching workflows found")
+    elif len(identified_workflows) > 1 :
+        raise Exception("Multiple workflows with the same identifier ({})".format(identifier))
+    else :
+        wf = identified_workflows[0]
+    
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
     
     
     if not os.path.exists(location):
         os.makedirs(location)
+        
     # Read the workflow file into a string
     workflowFile = open('./'+identifier+'.yaml', 'r')
     workflowYAML = workflowFile.read()
@@ -69,7 +79,9 @@ def run(identifier, location, datafile):
     logFileOut = open(location+'/workflow.log', 'w')
     # Call the platform
     args = ["mvn", "exec:java", "-Dexec.mainClass=org.data2semantics.platform.run.Run", '-Dexec.args=--output {0} {0}/workflow.yaml'.format(location)]
-    sp.Popen(args, cwd=workflows[identifier]['run from'], stdout = logFileOut, stderr = logFileOut) # run in the background
+    
+
+    sp.Popen(args, cwd=wf['basedir'], stdout = logFileOut, stderr = logFileOut) # run in the background
     
 def status(location):
     '''

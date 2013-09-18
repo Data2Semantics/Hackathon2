@@ -70,7 +70,14 @@
 			<div class="col-md-6" id='github'>
 			      {% block repositories %}
 			      {% endblock %}
-			      
+			      <div id='progress'>
+				    <h4 id='progress_heading'></h4>
+				    <div class="progress progress-striped active">
+				      <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+					<span class='sr-only' id='progress_text'></span>
+				      </div>
+				    </div>
+			      </div>
 
 			      <div id="browse">
 				    
@@ -87,24 +94,28 @@
 <script>
     $(function () {
         $('#filebreadcrumb').hide();
+	$('#progress').hide();
+	
+	$('#reposbreadcrumb').on('click', function(e) {
+	    $('#repositories').show();
+	    $('#reposbreadcrumb').toggleClass('active');
+	    $('#filebreadcrumb').toggleClass('active');
+	    $('#filebreadcrumb').hide();
+	    $('#browse').hide();
+        });
         
         $('.repository').on('click',function(e) {
             var clone_url = $(this).attr('clone_url');
             var name = $(this).attr('name');
             
-	    $('#reposbreadcrumb').on('click', function(e) {
-		  $('#repositories').show();
-		  $('#reposbreadcrumb').toggleClass('active');
-		  $('#filebreadcrumb').toggleClass('active');
-		  $('#filebreadcrumb').hide();
-		  $('#browse').hide();
-	    });
+	    $('#repositories').hide();
+	    show_progress_bar('Initializing dataset '+name);
 	    
             $.get('{{ url_for("github_clone") }}', { clone_url: clone_url, name: name}, function(data){
                 var name = data.name;
                 var path = data.name;
 		
-		$('#repositories').hide();
+		hide_progress_bar();
 		
                 $('#reposbreadcrumb').toggleClass('active');
                 $('#filebreadcrumb').toggleClass('active');
@@ -121,6 +132,15 @@
         });
     });
     
+    function show_progress_bar(message) {
+      $('#progress_heading').text(message);
+      $('#progress_message').text(message);
+      $('#progress').show();
+    }
+    
+    function hide_progress_bar() {
+      $('#progress').hide();
+    }
     
     function browse(browsepane, actionpane, path, name) {
       // Retrieve JSON list of files

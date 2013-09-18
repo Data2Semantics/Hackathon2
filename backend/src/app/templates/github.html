@@ -99,6 +99,7 @@
 	
 	$('#reposbreadcrumb').on('click', function(e) {
 	    $('#repositories').show();
+		$('#actions').hide();
 	    $('#reposbreadcrumb').toggleClass('active');
 	    $('#filebreadcrumb').toggleClass('active');
 	    $('#filebreadcrumb').hide();
@@ -109,25 +110,25 @@
             var clone_url = $(this).attr('clone_url');
             var name = $(this).attr('name');
             
-	    $('#repositories').hide();
-	    show_progress_bar('Initializing dataset '+name);
+	        $('#repositories').hide();
+	        show_progress_bar('Initializing dataset '+name);
 	    
             $.get('{{ url_for("github_clone") }}', { clone_url: clone_url, name: name}, function(data){
                 var name = data.name;
                 var path = data.name;
 		
-		hide_progress_bar();
+		        hide_progress_bar();
 		
                 $('#reposbreadcrumb').toggleClass('active');
                 $('#filebreadcrumb').toggleClass('active');
                 $('#filebreadcrumb').show();
                 
-		browse('#browse','#actions', path, name);
+		        browse('#browse','#actions', path, name);
 		
-		console.log("Showing #browse");
-		$('#browse').show();
+		        console.log("Showing #browse");
+		        $('#browse').show();
 		
-		console.log("Now showed #browse for the first time");
+		        console.log("Now showed #browse for the first time");
                 
             });
         });
@@ -144,6 +145,10 @@
     }
     
     function browse(browsepane, actionpane, path, name) {
+	  // Hide the actions
+	  $(actionpane).hide();
+	  
+	  
       // Retrieve JSON list of files
       
       $.get('{{ url_for("browse") }}', {path: path, name: name}, function(data) {
@@ -152,6 +157,8 @@
 	    
 	    // Clear the DIV containing the file browser.
 	    $(browsepane).empty();
+		
+		
 	    
 	    var heading = $('<h4></h4>');
 	    
@@ -205,7 +212,8 @@
 		  
 		  a.on('click', function(e){
 			$.get('{{ url_for("actions") }}', {name: value.name, path: value.path, type: value.type, mimetype: value.mimetype}, function(data){
-			      $(actionpane).html(data); 
+			      $(actionpane).html(data);
+				  $(actionpane).show();
 			});
 		  });
 		}

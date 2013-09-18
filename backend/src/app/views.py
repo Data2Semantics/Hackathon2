@@ -34,18 +34,7 @@ def github():
     except Exception as e:
         return e.message
     
-    
-    
-    if r.ok :
-        
-        repos = json.loads(r.text or r.content)
-        
-        return 
-        
-        
-        
-    else :
-        return 'error'
+
     
 
 @app.route('/github/clone', methods=['GET'])

@@ -73,7 +73,9 @@ class GitDataset(Dataset):
             mimetype = magic.from_file(p, mime=True)
             
             if mimetype == "text/plain" and (fn[-3:] == "ttl" or fn[-2:] == 'n3') :
-                mimetype = "text/turtle"    
+                mimetype = "text/turtle"
+            if mimetype == "text/plain" and (fn[-3:] == "owl" or fn[-2:] == 'rdf') :
+                mimetype = "application/rdf+xml"
             
             if os.path.isdir(p) :
                 filetype = 'dir'

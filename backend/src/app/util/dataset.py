@@ -72,7 +72,7 @@ class GitDataset(Dataset):
             
             mimetype = magic.from_file(p, mime=True)
             
-            if mimetype == "text/plain" and fn[-3:] == "ttl" :
+            if mimetype == "text/plain" and (fn[-3:] == "ttl" or fn[-2:] == 'n3') :
                 mimetype = "text/turtle"    
             
             if os.path.isdir(p) :

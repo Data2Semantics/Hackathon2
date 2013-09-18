@@ -1,7 +1,7 @@
 - 
     id:             compression
     name:           Compression
-    description:    Computes the compressed and uncompressed size. The compressed size of the data servers as an upper bound for the amount of information it contains.
+    description:    Computes the compressed and uncompressed size. The compressed size of the data serves as an upper bound for the amount of information it contains.
     basedir:        /home/d2shack/hackathon2/git/d2s-tools/complexity-analysis-tools/complexity-analysis-tools
     mimetypes:
         - any

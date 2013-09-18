@@ -5,9 +5,9 @@
 
         <p><strong>{{ w.name }}</strong></p>
         <p>{{ w.description }}</p>
-        <a id='{{ w.id }}runWorkflowBtn' onClick="runWorkflow(this);" class='workflow btn' name='{{ name }}' path='{{ path }}' identifier='{{ w.id }}'>Run</a>
-        <a id="{{ w.id }}showResults" style="display:none;" class='workflow btn' href="http://semweb.cs.vu.nl/hackathon/results/{{ path }}/{{ w.id }}/report/index.html" target="_blank">Show results</a>
-        <a id="{{ w.id }}showProgress" style="display:none;" class='workflow btn' href="" target="_blank">Show progress</a>
+        <a id='{{ w.id }}runWorkflowBtn' onClick="runWorkflow(this);" class='workflow btn btn-default' name='{{ name }}' path='{{ path }}' identifier='{{ w.id }}'>Run</a>
+        <a id="{{ w.id }}showResults" style="display:none;" class='workflow btn btn-default' href="http://semweb.cs.vu.nl/hackathon/results/{{ path }}/{{ w.id }}/report/index.html" target="_blank">Show results</a>
+        <a id="{{ w.id }}showProgress" style="display:none;" class='workflow btn btn-default' href="" target="_blank">Show progress</a>
         <a id="{{ w.id }}showProvenance" onClick="showProvenance(this)" style="display:none;" class='workflow btn' href="#" name='{{ name }}' path='{{ path }}' identifier='{{ w.id }}'>Show Provenance</a>
     </div>
     <script type="text/javascript">

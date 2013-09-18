@@ -7,6 +7,7 @@ import python2platform as p2p
 
 
 from util.dataset import GitDataset
+from util.repository import GitHubRepository
 
 
 from app import app, SCRATCH, WORKFLOW_RESULTS
@@ -21,20 +22,25 @@ def github():
     
     # Get the organization to be used from the GET
     
-    calltype = request.args.get('type','orgs')
+    repository_type = request.args.get('type','orgs')
     username = request.args.get('username','Data2Semantics')
 
     
-    r = requests.get('https://api.github.com/{}/{}/repos'.format(calltype,username))
+    try:
+        github_repository = GitHubRepository(repository_type, username)
+        
+        return render_template('github_repositories.html', type=repository_type, username=username, datasets=github_repository.list())
+
+    except Exception as e:
+        return e.message
     
-    repositories = []
     
     
     if r.ok :
         
         repos = json.loads(r.text or r.content)
         
-        return render_template('github_repositories.html', type=calltype, username=username, repos=repos)
+        return 
         
         
         

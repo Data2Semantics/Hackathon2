@@ -65,16 +65,22 @@ function showProvenance(provenanceButton) {
 	var identifier = element.attr("identifier");
 	var path = element.attr("path");
 	var name = element.attr("name");
+	
+	element.removeClass('btn-danger');
+	element.removeClass('btn-success');
+	
 	$.get('{{ url_for("upload_workflow_provenance") }}', {path : path, identifier: identifier, name: name}, function( data ) {
 		if (data.status == 'false') {
 			console.log("Something went wrong while uploading the workflow provenance to sesame.");
+			element.addClass('btn-danger');
 		} else {
 			console.log("Everything went very well.");
+			var endpoint_uri = encodeURIComponent("http://semweb.cs.vu.nl:8080/openrdf-sesame/repositories/ct");
+			element.addClass('btn-success');
+			window.open("http://semweb.cs.vu.nl/provoviz?endpoint_uri=" + endpoint_uri, "_blank");
 		}
 		
-	    var endpoint_uri = encodeURIComponent("http://semweb.cs.vu.nl:8080/openrdf-sesame/repositories/ct");
 	    
-	    window.open("http://semweb.cs.vu.nl/provoviz?endpoint_uri=" + endpoint_uri, "_blank");
 	});
 }
 

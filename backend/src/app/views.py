@@ -114,7 +114,6 @@ def upload_workflow_provenance():
     prov_data = prov_file.read()
     prov_file.close()
 
-
     headers =  {'content-type':'text/turtle;charset=UTF-8'}
     params = {'context': context}
 
@@ -126,7 +125,6 @@ def upload_workflow_provenance():
     if r.ok :
         return jsonify({'status': 'true'} )
     else :
-        print r
         return jsonify({'status': 'false'})
 
     
@@ -135,18 +133,14 @@ def upload_workflow_provenance():
     
 @app.route('/browse', methods=['GET'])
 def browse():
-    print "Browsing"
     path = request.args.get('path', None)
     if not path :
         raise Exception('Must specify a path!')
         
     name = request.args.get('name', request.cookies.get('repository_name'))
     
-    print '1', name, path
-    
     git_dataset = GitDataset(name)
     
-    print '2', name, path
     
     filelist, parent = git_dataset.browse(path)
     

@@ -1,0 +1,62 @@
+- 
+    id:             compression
+    name:           Compression
+    description:    Computes the compressed and uncompressed size. The compressed size of the data servers as an upper bound for the amount of information it contains.
+    basedir:        /home/d2shack/hackathon2/git/d2s-tools/complexity-analysis-tools/complexity-analysis-tools
+    mimetypes:
+        - any
+- 
+    id:             rdf_compression
+    name:           RDF Compression
+    description:    Computes the size of an RDF dataset under a specialized model.
+    basedir:        /home/d2shack/hackathon2/git/d2s-tools/RDFmodel
+    mimetypes:
+        - text/turtle
+        - application/x-turtle
+- 
+    id:             uri_partition
+    name:           URI Partitioning
+    description:    Analyzes the URIs in the data and partitions them into functional units.
+    basedir:        /home/d2shack/hackathon2/git/d2s-tools/RDFmodel
+    mimetypes:
+        - text/turtle
+        - application/x-turtle
+- 
+    id:             adjacency
+    name:           Adjacency Matrices
+    description:    Creates density plots of the adjacency matrix of the data, for a variety of orderings.
+    basedir:        /home/d2shack/hackathon2/git/d2s-tools/complexity-analysis-tools/complexity-analysis-tools
+    mimetypes:
+        - text/turtle
+        - application/x-turtle
+- 
+    id:             extract_xls
+    name:           Extract XLS string
+    description:    Test python module extracting string from xls.
+    basedir:        /home/d2shack/hackathon2/git/d2s-tools/RDFmodel
+    mimetypes:
+        - application/vnd.ms-excel
+- 
+    id:             huge_graph
+    name:           Huge Graph
+    description:    Graphs measures that will work on huge graphs. Generally, these are linear in the number of edges.
+    basedir:        /home/d2shack/hackathon2/git/d2s-tools/complexity-analysis-tools/complexity-analysis-tools
+    mimetypes:
+        - text/turtle
+        - application/x-turtle
+- 
+    id:             large_graph
+    name:           large Graph
+    description:    Graphs measures that will work on large graphs. These methods are generally a low polynomial in the number of edges or vertices.
+    basedir:        /home/d2shack/hackathon2/git/d2s-tools/complexity-analysis-tools/complexity-analysis-tools
+    mimetypes:
+        - text/turtle
+        - application/x-turtle
+- 
+    id:             small_graph
+    name:           Small Graph
+    description:    Similar to large graph plus global clustering coefficient, diameter, mean distance.
+    basedir:        /home/d2shack/hackathon2/git/d2s-tools/complexity-analysis-tools/complexity-analysis-tools
+    mimetypes:
+        - text/turtle
+        - application/x-turtle

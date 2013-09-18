@@ -108,7 +108,7 @@ def upload_workflow_provenance():
     absolute_path = os.path.join(SCRATCH,path)
     results_path = os.path.join(os.path.join(WORKFLOW_RESULTS,path),identifier)
   
-    prov_filename = os.path.join(os.path.join(results_path, "prov"),name)
+    prov_filename = os.path.join(os.path.join(results_path, "prov"),"prov-o.ttl")
     
     prov_file = open(prov_filename, 'r')
     prov_data = prov_file.read()

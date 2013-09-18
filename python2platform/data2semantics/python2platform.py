@@ -96,5 +96,7 @@ def status(location):
         return 'running'
     if os.path.exists(location  + '/status.finished'):
         return 'finished'
+    if os.path.exists(location  + '/status.error'):
+        return 'error'
     return 'no workflow' 
 

@@ -29,6 +29,7 @@
     mimetypes:
         - text/turtle
         - application/x-turtle
+        - application/rdf+xml
 - 
     id:             extract_xls
     name:           Extract XLS string
@@ -44,6 +45,7 @@
     mimetypes:
         - text/turtle
         - application/x-turtle
+        - application/rdf+xml
 - 
     id:             large_graph
     name:           large Graph
@@ -52,6 +54,7 @@
     mimetypes:
         - text/turtle
         - application/x-turtle
+        - application/rdf+xml
 - 
     id:             small_graph
     name:           Small Graph
@@ -60,3 +63,4 @@
     mimetypes:
         - text/turtle
         - application/x-turtle
+        - application/rdf+xml

@@ -1,6 +1,7 @@
 import requests
 import json
 
+
 class Repository:
     
     def __init__(self):

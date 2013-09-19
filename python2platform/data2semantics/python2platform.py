@@ -24,22 +24,9 @@ import yaml
 # The directory of the platform's pom.xml
 PLATFORM_DIR = "/home/d2shack/hackathon2/git/d2s-tools/d2s-platform"
 
-WORKFLOW_CONFIG = os.path.join(os.path.dirname(__file__),"workflows.yaml")
- 
-workflows = yaml.load(open(WORKFLOW_CONFIG,'r'))
 
-def get_applicable_workflows(mimetype):
-    '''
-      Return a list of descriptors of workflows. Each entry is a triple of the 
-      form: (identifier, human-readable name, description)
-    '''
 
-    ## Select those workflows which have the specified mimetype listed 
-    applicable_workflows = [wf for wf in workflows if ('any' in wf['mimetypes'] or mimetype in wf['mimetypes'])]
-    
-    return applicable_workflows
-
-def run(identifier, location, datafile):
+def run(workflow, datafile, location):
     '''
       Starts a workflow in a separate process. If there is already a workflow
       running in the given location, the function throws an exception
@@ -49,17 +36,12 @@ def run(identifier, location, datafile):
       dataFile: which file to run the workflow on 
     '''
     
-    identified_workflows = [wf for wf in workflows if wf['id'] == identifier ]
+    identifier = workflow['id']
+    basedir = workflow['basedir']
     
-    if len(identified_workflows) == 0 :
-        raise Exception("No matching workflows found")
-    elif len(identified_workflows) > 1 :
-        raise Exception("Multiple workflows with the same identifier ({})".format(identifier))
-    else :
-        wf = identified_workflows[0]
-    
+    print "Running workflow '{}'".format(identifier)
+
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
-    
     
     if not os.path.exists(location):
         os.makedirs(location)
@@ -81,22 +63,7 @@ def run(identifier, location, datafile):
     args = ["mvn", "exec:java", "-Dexec.mainClass=org.data2semantics.platform.run.Run", '-Dexec.args=--output {0} {0}/workflow.yaml'.format(location)]
     
 
-    sp.Popen(args, cwd=wf['basedir'], stdout = logFileOut, stderr = logFileOut) # run in the background
+    sp.Popen(args, cwd=basedir, stdout = logFileOut, stderr = logFileOut) # run in the background
     
-def status(location):
-    '''
-      Returns the current status of a workflow runnning in the given location 
-      (a directory). The status is represented by one of the strings 
-          'running'
-          'no workflow'
-          'error'
-          'finished'
-    '''
-    if os.path.exists(location  + '/status.running'):
-        return 'running'
-    if os.path.exists(location  + '/status.finished'):
-        return 'finished'
-    if os.path.exists(location  + '/status.error'):
-        return 'error'
-    return 'no workflow' 
+ 
 

@@ -189,33 +189,33 @@
 	    $.each(files, function(index, value) {
 	        console.log(value);
 		
-		var a = $('<a></a>');
-		
-		a.toggleClass('list-group-item');
-		
-		if (value.type == 'dir') {
-		  var icon = $('<span class="glyphicon glyphicon-folder-open"></span>');
-		  a.append(icon);
-		  a.append('<span style="padding-left: 1em;">' + value.name + '</span>');
-	          a.on('click', function(e){
-			browse(browsepane, actionpane, value.path, name);
-		  });
-		} else {
-		  var icon = $('<span class="glyphicon glyphicon-file"></span>');
-		  a.append(icon);
-		  a.append('<span style="padding-left: 1em;">' + value.name + '</span>');
-		  
-		  var badge = $('<span></span>');
-		  badge.append(" ("+value.mimetype+")");
-		  badge.toggleClass('badge');
-		  a.append(badge);
-		  
-		  a.on('click', function(e){
-			$.get('{{ url_for("actions") }}', {name: value.name, path: value.path, type: value.type, mimetype: value.mimetype}, function(data){
-			      $(actionpane).html(data);
-				  $(actionpane).show();
-			});
-		  });
+			var a = $('<a></a>');
+			
+			a.toggleClass('list-group-item');
+			
+			if (value.type == 'dir') {
+			  var icon = $('<span class="glyphicon glyphicon-folder-open"></span>');
+			  a.append(icon);
+			  a.append('<span style="padding-left: 1em;">' + value.name + '</span>');
+				  a.on('click', function(e){
+				browse(browsepane, actionpane, value.path, name);
+			  });
+			} else {
+			  var icon = $('<span class="glyphicon glyphicon-file"></span>');
+			  a.append(icon);
+			  a.append('<span style="padding-left: 1em;">' + value.name + '</span>');
+			  
+			  var badge = $('<span></span>');
+			  badge.append(" ("+value.mimetype+")");
+			  badge.toggleClass('badge');
+			  a.append(badge);
+			  
+			  a.on('click', function(e){
+				$.get('{{ url_for("actions") }}', {dataset: name, name: value.name, path: value.path, type: value.type, mimetype: value.mimetype}, function(data){
+					  $(actionpane).html(data);
+					  $(actionpane).show();
+				});
+			  });
 		}
 		
 		

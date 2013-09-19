@@ -5,7 +5,7 @@
 
         <p><strong>{{ w.name }}</strong></p>
         <p>{{ w.description }}</p>
-        <a id='{{ w.id }}runWorkflowBtn' onClick="runWorkflow(this);" class='workflow btn btn-default' name='{{ name }}' path='{{ path }}' identifier='{{ w.id }}'>Run</a>
+        <a id='{{ w.id }}runWorkflowBtn' onClick="runWorkflow(this);" class='workflow btn btn-default' dataset='{{ dataset }}' name='{{ name }}' path='{{ path }}' identifier='{{ w.id }}'>Run</a>
         <a id="{{ w.id }}showResults" style="display:none;" class='workflow btn btn-default' href="http://semweb.cs.vu.nl/hackathon/results/{{ path }}/{{ w.id }}/report/index.html" target="_blank">Show results</a>
         <a id="{{ w.id }}showProgress" style="display:none;" class='workflow btn btn-default' href="" target="_blank">Show progress</a>
         <a id="{{ w.id }}showProvenance" onClick="showProvenance(this)" style="display:none;" class='workflow btn btn-default' href="#" name='{{ name }}' path='{{ path }}' identifier='{{ w.id }}'>Show Provenance</a>
@@ -54,7 +54,8 @@ function runWorkflow(runWorkflowButton) {
 	var identifier = element.attr("identifier");
 	var path = element.attr("path");
 	var name = element.attr("name");
-	$.get('{{ url_for("run_workflow") }}', {path : path, identifier: identifier, name: name});
+	var dataset = element.attr("dataset")
+	$.get('{{ url_for("run_workflow") }}', {path : path, identifier: identifier, name: name, dataset: dataset});
 	
 	element.addClass('disabled');
 	element.html('Running...');

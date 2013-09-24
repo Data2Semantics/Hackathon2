@@ -26,14 +26,22 @@ def get_target(workflow_identifier, source):
     
     target = os.path.join(os.path.join(WORKFLOW_RESULTS,source),workflow_identifier)
     
+    if os.path.exists(target):
+        app.logger.debug("Target directory already exists")
+    else :
+        app.logger.debug('Creating target directory {}'.format(target))
+        os.mkdir(target)
+    
     app.logger.debug('Using target {}'.format(target))
     return target
 
 
 def import_workflow_module(module_name):
     app.logger.debug("Importing module {}".format(module_name))
-    module = __import__(module_name)
-    app.logger.debug("Done")
+    
+    module = importlib.import_module(module_name)
+    
+    app.logger.debug("Done: {} imported".format(module))
     
     return module
 
@@ -62,23 +70,26 @@ def run(workflow_identifier, dataset_name, source):
         
     ### Tot Hier
     
+    app.logger.debug("'{}' =? '{}'".format(workflow['type'],dataset.type))
+    
     if workflow['type'] == 'file' :
         app.logger.debug("Workflow type is 'file'")
-        pass
     elif workflow['type'] == dataset.type :
         app.logger.debug('Found matching workflow for {}'.format(workflow['type']))
+        
+        # Use dataset root (dataset_name) as source
+        source = dataset_name
+        
     else :
-        app.logger.debug('{} is not {}'.format(workflow['type'],type(dataset_name)))
-    
+        app.logger.debug('{} is not {}'.format(workflow['type'],dataset.type))
     
     target = get_target(workflow_identifier, source)
     
     absolute_path_to_source = os.path.join(SCRATCH,source)
     
-    module_name = workflow['module']    
-    module = import_workflow_module(module_name)
+    module_name = workflow['module']
     
-    app.logger.debug("Type: {}".format(type(module)))
+    module = import_workflow_module(module_name)
     
     app.logger.debug("Running workflow '{}' ({}) on {}. Output will be stored at {}".format(workflow_identifier,module_name,source,target))
     module.run(workflow, absolute_path_to_source, target)

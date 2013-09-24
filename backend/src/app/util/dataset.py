@@ -27,7 +27,7 @@ class Dataset(object):
         
         if os.path.exists(self.path) and os.path.exists(type_path):
             type_file = open(type_path,'r')
-            self.type = type_file.read()
+            self.type = type_file.read().strip()
             type_file.close()
             
             self.initialized = True
@@ -68,7 +68,7 @@ class GitDataset(Dataset):
             raise Exception("GitHub URL not specified")
         
         self.url = url
-        self.type = "util.dataset.GitDataset"
+        self.type = "app.util.dataset.GitDataset"
         
         git = sh.git.bake(_cwd=self.basedir)
         

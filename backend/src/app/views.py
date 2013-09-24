@@ -1,16 +1,15 @@
-from flask import render_template, url_for, request, g, make_response, jsonify
+from flask import render_template, url_for, request, g, make_response, jsonify, session
 import requests
 import json
 import sh
 import os
-import python2platform as p2p
-
+import workflows
 
 from util.dataset import GitDataset
 from util.repository import GitHubRepository
 
 
-from app import app, SCRATCH, WORKFLOW_RESULTS
+from app import app, SCRATCH
 
 
 
@@ -46,8 +45,8 @@ def github_clone():
         git_dataset = GitDataset(name)    
         git_dataset.initialize(clone_url)
         
+        
         response = jsonify({'name': name})
-        response.set_cookie('repository_name', git_dataset.name)
         
         return response
     else :
@@ -64,36 +63,31 @@ def actions():
     mimetype = request.args.get('mimetype')
     path = request.args.get('path')
     name = request.args.get('name')
+    dataset = request.args.get('dataset')
     
-    workflows = p2p.get_applicable_workflows(mimetype)
+    actions = workflows.get_workflows(mimetype)
     
-    return render_template('actions.html', name=name, path=path, mimetype=mimetype, workflows=workflows)
+    return render_template('actions.html', dataset=dataset, name=name, path=path, mimetype=mimetype, workflows=actions)
 
    
 
 @app.route('/workflow/run')
 def run_workflow():
-    identifier = request.args.get('identifier')
+    workflow_identifier = request.args.get('identifier')
     path = request.args.get('path')
-    name = request.args.get('name')
+    dataset_name = request.args.get('dataset')
+
     
-    absolute_path = os.path.join(SCRATCH,path)
+    workflows.run(workflow_identifier, dataset_name, path)
     
-    results_path = os.path.join(os.path.join(WORKFLOW_RESULTS,path),identifier)
-    
-    p2p.run(identifier, results_path, absolute_path)
     return jsonify({'results': True} )
     
 @app.route('/workflow/status')
 def get_workflow_status():
     identifier = request.args.get('identifier')
     path = request.args.get('path')
-    name = request.args.get('name')
     
-    absolute_path = os.path.join(SCRATCH,path)
-    
-    results_path = os.path.join(os.path.join(WORKFLOW_RESULTS,path),identifier)
-    return jsonify({'status': p2p.status(results_path)} )
+    return jsonify({'status': workflows.status(identifier, path)} )
 
 
 @app.route('/workflow/provenance')
@@ -140,8 +134,7 @@ def browse():
     name = request.args.get('name', request.cookies.get('repository_name'))
     
     git_dataset = GitDataset(name)
-    
-    
+
     filelist, parent = git_dataset.browse(path)
     
     

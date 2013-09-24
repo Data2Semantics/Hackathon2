@@ -20,24 +20,29 @@ def get_workflow_by_id(workflow_identifier):
         
     return identified_workflows[0]
 
-def get_target(workflow_identifier, source):
+def get_target(workflow_identifier, source, create_dirs = True):
     app.logger.debug("source: {}".format(source))
     app.logger.debug("WORKFLOW_RESULTS: {}".format(WORKFLOW_RESULTS))
     
     results_path = os.path.join(WORKFLOW_RESULTS,source)
-    if os.path.exists(results_path):
-        app.logger.debug("Results path for this dataset already exists")
-    else :
-        app.logger.debug("Creating results directory {}".format(results_path))
-        os.mkdir(results_path)
-        
     target = os.path.join(results_path,workflow_identifier)
     
-    if os.path.exists(target):
-        app.logger.debug("Target directory already exists")
-    else :
-        app.logger.debug('Creating target directory {}'.format(target))
-        os.mkdir(target)
+    
+    if create_dirs :
+        
+        if os.path.exists(results_path):
+            app.logger.debug("Results path for this dataset already exists")
+        else :
+            app.logger.debug("Creating results directory {}".format(results_path))
+            os.makedirs(results_path)
+            
+        
+        
+        if os.path.exists(target):
+            app.logger.debug("Target directory already exists")
+        else :
+            app.logger.debug('Creating target directory {}'.format(target))
+            os.makedirs(target)
     
     app.logger.debug('Using target {}'.format(target))
     return target
@@ -115,7 +120,7 @@ def status(workflow_identifier, source):
           'error'
           'finished'
     '''
-    target = get_target(workflow_identifier, source)
+    target = get_target(workflow_identifier, source, create_dirs=False)
 
 
     if os.path.exists(os.path.join(target, '/status.running')):

@@ -24,7 +24,14 @@ def get_target(workflow_identifier, source):
     app.logger.debug("source: {}".format(source))
     app.logger.debug("WORKFLOW_RESULTS: {}".format(WORKFLOW_RESULTS))
     
-    target = os.path.join(os.path.join(WORKFLOW_RESULTS,source),workflow_identifier)
+    results_path = os.path.join(WORKFLOW_RESULTS,source)
+    if os.path.exists(results_path):
+        app.logger.debug("Results path for this dataset already exists")
+    else :
+        app.logger.debug("Creating results directory {}".format(results_path))
+        os.mkdir(results_path)
+        
+    target = os.path.join(results_path,workflow_identifier)
     
     if os.path.exists(target):
         app.logger.debug("Target directory already exists")
@@ -67,6 +74,7 @@ def run(workflow_identifier, dataset_name, source):
         app.logger.debug("Casting dataset {} to type {}".format(dataset, dataset.type))
         dataset.__class__ = eval(dataset.type[1:])
         dataset.__init__(dataset_name)
+        
         
     ### Tot Hier
     

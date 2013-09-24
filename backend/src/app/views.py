@@ -100,7 +100,7 @@ def upload_workflow_provenance():
     context = "<http://" + os.path.join(path, name) + ">"
     
     absolute_path = os.path.join(SCRATCH,path)
-    results_path = os.path.join(os.path.join(WORKFLOW_RESULTS,path),identifier)
+    results_path = os.path.join(os.path.join(workflows.WORKFLOW_RESULTS,path),identifier)
   
     prov_filename = os.path.join(os.path.join(results_path, "prov"),"prov-o.ttl")
     

@@ -19,7 +19,6 @@ def remove(filename):
     os.remove(filename)
 
 
-
 def run(workflow, source, target):
     
     workflow_identifier = workflow['id']
@@ -42,9 +41,9 @@ def run(workflow, source, target):
     if r.ok :
         app.logger.debug("Succesfully retrieved provenance trail, writing to {}".format(output_file))
         
-        print r.text
+        print r.content
         
-        open(output_file,'w').write(r.text.encode('utf-8'))
+        open(output_file,'w').write(r.content)
         
         app.logger.debug("Output written to file")
         

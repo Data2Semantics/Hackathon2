@@ -122,9 +122,17 @@ def status(workflow_identifier, source):
     '''
     target = get_target(workflow_identifier, source, create_dirs=False)
 
-
+    logfilename = os.path.join(target, 'workflow.log')
+    
     if os.path.exists(os.path.join(target, '/status.running')):
-        return 'running'
+        if os.path.exists(logfilename) :
+            log = open(logfilename,'r').read()
+            if "[ERROR]" in log:
+                return 'error'
+            else :
+                return 'running'
+        else :
+            return 'running'
     if os.path.exists(os.path.join(target, '/status.finished')):
         return 'finished'
     if os.path.exists(os.path.join(target, '/status.error')):

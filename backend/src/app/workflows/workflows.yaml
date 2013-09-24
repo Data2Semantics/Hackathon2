@@ -81,6 +81,17 @@
         - application/x-turtle
         - application/rdf+xml
 -
+    id:             affiliation_prediction_workflow
+    name:           Affiliation Prediction
+    descripts:      Attempts to predict affilliations of persons encoded using the SWRC vocabulary.
+    module:         python2platform
+    type:           file
+    basedir:        /home/d2shack/hackathon2/git/d2s-tools/RDFmodel
+    mimetypes:
+        - text/turtle
+        - application/x-turtle
+        - application/rdf+xml
+-
     id:             git2prov
     name:           Git2PROV
     description:    Generate a provenance graph from the git commit history.

@@ -237,7 +237,7 @@ function check_status(workflow_id, filepath, continue_polling) {
             if (continue_polling) {
                 console.log("Waiting 5 seconds...");
                 setTimeout(function(){
-                    check_status(workflow_id, filepath, false)}, 5000);
+                    check_status(workflow_id, filepath, true)}, 5000);
             }
         }
     }); 

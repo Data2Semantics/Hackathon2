@@ -111,10 +111,16 @@ def run(workflow_identifier, dataset_name, source):
     module = import_workflow_module(module_name)
     
     app.logger.debug("Running workflow '{}' ({}) on {}. Output will be stored at {}".format(workflow_identifier,module_name,source,target))
-    module.run(workflow, absolute_path_to_source, target)
-    app.logger.debug("Workflow started")
+    success = module.run(workflow, absolute_path_to_source, target)
+    if success :
+        app.logger.debug("Workflow initialized...")
+    else :
+        app.logger.debug("Something went wrong")
+        error_file = os.path.join(target, 'status.error')
+        touch(error_file)
+        
     
-    return
+    return source
     
     
 def status(workflow_identifier, source):

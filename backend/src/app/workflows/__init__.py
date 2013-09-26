@@ -166,8 +166,18 @@ def status(workflow_identifier, source):
             return 'initializing'
 
 
-
+def get_log(workflow_identifier, source):
+    target = get_target(workflow_identifier, source, create_dirs = False)
     
+    logfilename = os.path.join(target, 'workflow.log')
+    
+    if os.path.exists(logfilename):
+        logtext = open(logfilename, 'r').read()
+        
+        return logtext
+    else :
+        return False
+
 
 def get_workflows(mimetype):
     '''

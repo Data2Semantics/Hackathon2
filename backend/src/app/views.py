@@ -126,6 +126,16 @@ def upload_workflow_provenance():
         return jsonify({'status': 'false'})
 
     
+@app.route('/workflow/log')
+def get_workflow_log():
+    workflow_id = request.args.get('workflow_id')
+    source = request.args.get('source')
+    
+    log = workflows.get_log(workflow_id, source)
+    
+    return jsonify({'result': log})
+    
+
 
 
     

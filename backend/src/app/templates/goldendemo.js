@@ -223,6 +223,26 @@ function check_status(workflow_id, filepath, continue_polling) {
             button.removeClass('btn-info');
             button.addClass('btn-danger');
             button.html('Error');
+            
+            $.get('{{ url_for("get_workflow_log") }}', {workflow_id: workflow_id, source: filepath}, function(data){
+                if (data.result) {
+                    var log_button = $('<a></a>');
+                    log_button.addClass('btn');
+                    log_button.addClass('btn-info');
+                    log_button.html('Show Log');
+                    log_button.attr('text',data.result);
+                    
+                    log_button.on('click', function(){
+                        window.alert($(this).attr('text'));
+                    
+                    });
+                }
+                
+            });
+
+            
+            
+            
         } else if (data.status == 'running') {
             // Poll again in 10 seconds
             button.addClass('btn-info');

@@ -128,7 +128,7 @@ def status(workflow_identifier, source):
       Returns the current status of a workflow runnning in the given location 
       (a directory). The status is represented by one of the strings 
           'running'
-          'no workflow'
+          'initializing'
           'error'
           'finished'
     '''
@@ -136,22 +136,28 @@ def status(workflow_identifier, source):
 
     logfilename = os.path.join(target, 'workflow.log')
     
-    if os.path.exists(os.path.join(target, '/status.running')):
+    if os.path.exists(os.path.join(target, 'status.running')):
+        app.logger.debug("Found status.running in {}".format(target))
         if os.path.exists(logfilename) :
             log = open(logfilename,'r').read()
             if "[ERROR]" in log:
+                app.logger.debug("Found [ERROR] in {}".format(logfilename))
                 return 'error'
             else :
                 return 'running'
         else :
             return 'running'
-    if os.path.exists(os.path.join(target, '/status.finished')):
+    elif os.path.exists(os.path.join(target, 'status.finished')):
+        app.logger.debug("Found status.finished in {}".format(target))
         return 'finished'
-    if os.path.exists(os.path.join(target, '/status.error')):
+    elif os.path.exists(os.path.join(target, 'status.error')):
+        app.logger.debug("Found status.error in {}".format(target))
         return 'error'
-    return 'no workflow'
+    else :
+        app.logger.debug("Did not find status file in {}".format(target))
+        return 'initializing'
 
-    return True
+
 
     
 

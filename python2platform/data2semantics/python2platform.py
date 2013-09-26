@@ -46,6 +46,13 @@ def run(workflow, datafile, location):
     if not os.path.exists(location):
         os.makedirs(location)
         
+        
+    workflowFileName = './'+identifier+'.yaml'
+    
+    if not os.path.exists(workflowFileName) :
+            print "Workflow specification file '{}' does not exist".format(workflowFileName)
+            return False
+    
     # Read the workflow file into a string
     workflowFile = open('./'+identifier+'.yaml', 'r')
     workflowYAML = workflowFile.read()
@@ -62,8 +69,12 @@ def run(workflow, datafile, location):
     # Call the platform
     args = ["mvn", "exec:java", "-Dexec.mainClass=org.data2semantics.platform.run.Run", '-Dexec.args=--output {0} {0}/workflow.yaml'.format(location)]
     
-
-    sp.Popen(args, cwd=basedir, stdout = logFileOut, stderr = logFileOut) # run in the background
+    try:
+        sp.Popen(args, cwd=basedir, stdout = logFileOut, stderr = logFileOut) # run in the background
+    except Exception as e:
+        print e
+        return False
+    
     
  
 

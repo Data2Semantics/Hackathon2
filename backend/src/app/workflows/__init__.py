@@ -155,7 +155,15 @@ def status(workflow_identifier, source):
         return 'error'
     else :
         app.logger.debug("Did not find status file in {}".format(target))
-        return 'initializing'
+        if os.path.exists(logfilename) :
+            log = open(logfilename,'r').read()
+            if "[ERROR]" in log:
+                app.logger.debug("Found [ERROR] in {}".format(logfilename))
+                return 'error'
+            else :
+                return 'initializing'
+        else :
+            return 'initializing'
 
 
 

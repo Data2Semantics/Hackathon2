@@ -10,6 +10,12 @@ WORKFLOW_RESULTS = os.path.join(os.path.abspath(os.path.join(os.path.join(__file
 
 workflows = yaml.load(open(WORKFLOW_CONFIG,'r'))
 
+def touch(filename):
+    open(filename, 'a').close()
+    
+def remove(filename):
+    os.remove(filename)
+
 def get_workflow_by_id(workflow_identifier):
     identified_workflows = [wf for wf in workflows if wf['id'] == workflow_identifier ]
     

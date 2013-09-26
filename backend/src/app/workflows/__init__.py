@@ -10,6 +10,12 @@ WORKFLOW_RESULTS = os.path.join(os.path.abspath(os.path.join(os.path.join(__file
 
 workflows = yaml.load(open(WORKFLOW_CONFIG,'r'))
 
+def touch(filename):
+    open(filename, 'a').close()
+    
+def remove(filename):
+    os.remove(filename)
+
 def get_workflow_by_id(workflow_identifier):
     identified_workflows = [wf for wf in workflows if wf['id'] == workflow_identifier ]
     
@@ -105,10 +111,16 @@ def run(workflow_identifier, dataset_name, source):
     module = import_workflow_module(module_name)
     
     app.logger.debug("Running workflow '{}' ({}) on {}. Output will be stored at {}".format(workflow_identifier,module_name,source,target))
-    module.run(workflow, absolute_path_to_source, target)
-    app.logger.debug("Workflow started")
+    success = module.run(workflow, absolute_path_to_source, target)
+    if success :
+        app.logger.debug("Workflow initialized...")
+    else :
+        app.logger.debug("Something went wrong")
+        error_file = os.path.join(target, 'status.error')
+        touch(error_file)
+        
     
-    return
+    return source
     
     
 def status(workflow_identifier, source):
@@ -116,7 +128,7 @@ def status(workflow_identifier, source):
       Returns the current status of a workflow runnning in the given location 
       (a directory). The status is represented by one of the strings 
           'running'
-          'no workflow'
+          'initializing'
           'error'
           'finished'
     '''
@@ -124,22 +136,28 @@ def status(workflow_identifier, source):
 
     logfilename = os.path.join(target, 'workflow.log')
     
-    if os.path.exists(os.path.join(target, '/status.running')):
+    if os.path.exists(os.path.join(target, 'status.running')):
+        app.logger.debug("Found status.running in {}".format(target))
         if os.path.exists(logfilename) :
             log = open(logfilename,'r').read()
             if "[ERROR]" in log:
+                app.logger.debug("Found [ERROR] in {}".format(logfilename))
                 return 'error'
             else :
                 return 'running'
         else :
             return 'running'
-    if os.path.exists(os.path.join(target, '/status.finished')):
+    elif os.path.exists(os.path.join(target, 'status.finished')):
+        app.logger.debug("Found status.finished in {}".format(target))
         return 'finished'
-    if os.path.exists(os.path.join(target, '/status.error')):
+    elif os.path.exists(os.path.join(target, 'status.error')):
+        app.logger.debug("Found status.error in {}".format(target))
         return 'error'
-    return 'no workflow'
+    else :
+        app.logger.debug("Did not find status file in {}".format(target))
+        return 'initializing'
 
-    return True
+
 
     
 

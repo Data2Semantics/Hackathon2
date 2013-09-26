@@ -67,27 +67,31 @@ def actions():
     
     actions = workflows.get_workflows(mimetype)
     
-    return render_template('actions.html', dataset=dataset, name=name, path=path, mimetype=mimetype, workflows=actions)
+    response = {'dataset': dataset, 'name': name, 'path': path, 'mimetype': mimetype, 'workflows': actions}
+    
+    return jsonify(response)
 
    
 
 @app.route('/workflow/run')
 def run_workflow():
-    workflow_identifier = request.args.get('identifier')
-    path = request.args.get('path')
+    workflow_identifier = request.args.get('workflow_id')
+    filepath = request.args.get('filepath')
     dataset_name = request.args.get('dataset')
 
     
-    workflows.run(workflow_identifier, dataset_name, path)
+    source = workflows.run(workflow_identifier, dataset_name, filepath)
     
-    return jsonify({'results': True} )
+    return jsonify({'running': True,'workflow_id': workflow_identifier, 'source': source, 'dataset': dataset_name} );
     
 @app.route('/workflow/status')
 def get_workflow_status():
-    identifier = request.args.get('identifier')
-    path = request.args.get('path')
+    workflow_id = request.args.get('workflow_id')
+    filepath = request.args.get('filepath')
     
-    return jsonify({'status': workflows.status(identifier, path)} )
+    app.logger.debug("Checking workflow status for {}".format(workflow_id))
+    
+    return jsonify({'status': workflows.status(workflow_id, filepath), 'workflow_id': workflow_id, 'filepath': filepath} )
 
 
 @app.route('/workflow/provenance')

@@ -52,6 +52,9 @@ function hide_progress_bar() {
     $('#progress').hide();
 }
 
+
+
+
 function browse(browsepane, actionpane, path, name) {
     // Hide the actions
     $(actionpane).hide();
@@ -127,7 +130,7 @@ function browse(browsepane, actionpane, path, name) {
                         type: value.type,
                         mimetype: value.mimetype
                     }, function(data) {
-                        $(actionpane).html(data);
+                        render_workflows(actionpane, data);
                         $(actionpane).show();
                     });
                 });
@@ -140,6 +143,102 @@ function browse(browsepane, actionpane, path, name) {
 
         $(browsepane).append(list);
     });
+}
 
+function render_workflows(paneid, data){
+    
+    var pane = $(paneid);
+    pane.empty();
+    pane.append("<h4>Possible Actions for '"+data.name+"'");
+    
+    console.log(data);
+    
+    for (w in data.workflows) {
+        
+        var workflow = data.workflows[w];
+        
+        console.log("Now configuring "+workflow.id);
+        console.log(workflow);
+        
+        var widget = $('<div></div>');
+        widget.addClass('well');
+        
+        var workflow_heading = $('<p><strong>'+workflow.name+'</strong></p>');
+        
+        var workflow_description = $('<p>'+workflow.description+'</p>');
+        
+        // The "Run" Button
+        var run_button = $('<a></a>');
+        run_button.addClass('btn');
+        run_button.addClass('btn-primary');
+        run_button.attr('workflow',workflow.id);
+        run_button.attr('filename',workflow.name);
+        run_button.attr('dataset',data.dataset);
+        run_button.attr('filepath',data.path);
+        
+        run_button.html('Run');
+        
+        run_button.on('click',function(){
+            var button = $(this);
+            console.log('Clicked '+button.attr('workflow'));
+            
+            button.removeClass('btn-primary');
+            button.addClass('btn-info');
+            button.addClass('disabled');
+            
+            button.html('Calling ...');
+            
+            $.get('{{ url_for("run_workflow") }}',
+                  {filepath: button.attr('filepath'), workflow_id: button.attr('workflow'), filename: button.attr('filename'), dataset: button.attr('dataset')},
+                  function(data){
+                    var button = $('a[workflow="'+data.workflow_id+'"]');
+                    
+                    console.log('Running '+data.workflow_id);
+                    button.html('Initializing...');
+                    
+                    check_status(data.workflow_id, data.source, true);
+            });
+        });
+        
+        widget.append(workflow_heading);
+        widget.append(workflow_description);
+        widget.append(run_button);
+        
+        pane.append(widget);
+    }    
+}
 
+function check_status(workflow_id, filepath, continue_polling) {
+    console.log("Checking status of "+workflow_id);
+    $.get('{{ url_for("get_workflow_status") }}', {workflow_id: workflow_id, filepath: filepath}, function(data){
+        
+        var button = $('a[workflow="'+ data.workflow_id + '"]');
+        
+        console.log("Retrieved status "+data.status+" for "+data.workflow_id);
+        if (data.status == 'finished') {
+            button.removeClass('btn-info');
+            button.addClass('btn-success');
+            button.html('Done');
+        } else if (data.status == 'error') {
+            button.removeClass('btn-info');
+            button.addClass('btn-danger');
+            button.html('Error');
+        } else if (data.status == 'running') {
+            // Poll again in 10 seconds
+            button.addClass('btn-info');
+            button.html('Running...');
+            console.log("Waiting 5 seconds...");
+            setTimeout(function(){
+                check_status(workflow_id, filepath, true)}, 5000);
+        } else if (data.status == 'initializing') {
+            // Poll again in 10 seconds
+            button.addClass('btn-info');
+            button.html('Initializing...');
+            if (continue_polling) {
+                console.log("Waiting 5 seconds...");
+                setTimeout(function(){
+                    check_status(workflow_id, filepath, false)}, 5000);
+            }
+        }
+    }); 
 }

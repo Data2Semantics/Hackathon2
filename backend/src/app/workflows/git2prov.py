@@ -1,6 +1,7 @@
 from app import app
 import requests
 import os
+from app.workflows import touch, remove
 
 
 GIT2PROV_URL = "http://git2prov.org/git2prov"
@@ -12,11 +13,7 @@ STATUS_ERROR = "status.error"
 
 # ?giturl=https%3A%2F%2Fgithub.com%2Ftdn%2FSMIF-Mozaiek.git&serialization=PROV-O
 
-def touch(filename):
-    open(filename, 'a').close()
-    
-def remove(filename):
-    os.remove(filename)
+
 
 
 def run(workflow, source, target):
@@ -53,6 +50,6 @@ def run(workflow, source, target):
     else :
         remove(status_running)
         touch(status_error)
-        raise Exception(r)
+        return False
     
-    return
+    return True

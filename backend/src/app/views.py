@@ -101,7 +101,7 @@ def upload_workflow_provenance():
     path = request.args.get('path')
     name = request.args.get('name')
 
-    context = "<http://" + os.path.join(path, name) + ">"
+    context = "<http://data2semantics.org/workflow/{}/{}>".format(identifier, os.path.join(path, name))
     
     absolute_path = os.path.join(SCRATCH,path)
     results_path = os.path.join(os.path.join(workflows.WORKFLOW_RESULTS,path),identifier)

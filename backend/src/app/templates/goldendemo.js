@@ -219,6 +219,9 @@ function check_status(workflow_id, filepath, continue_polling) {
             button.removeClass('btn-info');
             button.addClass('btn-success');
             button.html('Done');
+            
+            show_report(workflow_id, filepath);
+            
         } else if (data.status == 'error') {
             button.removeClass('btn-info');
             button.addClass('btn-danger');
@@ -261,4 +264,15 @@ function check_status(workflow_id, filepath, continue_polling) {
             }
         }
     }); 
+}
+
+function show_report(workflow_id, source) {
+    $.get('{{ url_for("get_workflow_report") }}', {workflow_id: workflow_id, source: source}, function(data){
+        var div = $("<div></div>");
+        div.addClass('col-md-6');
+        
+        div.append(data);
+        
+        $("#report_widgets").append(div);
+    });
 }

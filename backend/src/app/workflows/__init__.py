@@ -177,6 +177,46 @@ def get_log(workflow_identifier, source):
         return logtext
     else :
         return False
+    
+def get_report(workflow_identifier, source):
+    target = get_target(workflow_identifier, source, create_dirs = False)
+    workflow = get_workflow_by_id(workflow_identifier)
+    
+    report_type = workflow['report']['type']
+    
+    if report_type == 'csv':
+        return get_csv_report(workflow, target)
+
+def get_csv_report(workflow, target):
+    from csv import DictReader
+    
+    workflow_identifier = workflow['id']
+    workflow_name = workflow['name']
+    
+    template_name = workflow['report']['template']
+    report_file = workflow['report']['file']    
+    identifier_column = workflow['report']['id']
+    value_columns = workflow['report']['columns']
+    
+    report_file = os.path.join(target, 'csv/{}'.format(report_file))
+    
+    report_reader = DictReader(open(report_file,'r'), delimiter=',', quotechar='"')
+    
+    report = {}
+    
+    for r in report_reader:
+        print r
+        
+        key = r[identifier_column]
+        values = {k: r[k] for k in value_columns}
+        
+        report[key] = values
+        
+    return workflow_name, template_name, identifier_column, report
+        
+    
+    
+
 
 
 def get_workflows(mimetype):

@@ -136,6 +136,15 @@ def get_workflow_log():
     return jsonify({'result': log})
     
 
+@app.route('/workflow/report')
+def get_workflow_report():
+    workflow_id = request.args.get('workflow_id')
+    source = request.args.get('source')
+    
+    name, template, identifier_key, report = workflows.get_report(workflow_id, source)
+    
+    return render_template(template, source=source, name=name, identifier_key=identifier_key, report=report)
+
 
 
     

@@ -3,5 +3,8 @@
 *.pyc
 .pydevproject
 *.orig
-scratch/*
-results/*
+backend/src/app/scratch/*
+backend/src/app/results/*
+*.ipynb
+
+*.tmproj

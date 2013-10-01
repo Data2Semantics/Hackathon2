@@ -17,6 +17,20 @@
     mimetypes:
         - text/turtle
         - application/x-turtle
+    report:
+        type:       csv
+        file:       rdfcompression.csv
+        template:   csv_multiple.html
+        id:         RDFCompression.minlinks
+        columns:
+            - Structure codelength no-URIs
+            - Structure codelength URIs
+            - URI codelength
+            - URI gzipped codelength
+            - URI packed codelength
+            - URI gzipped,packed codelengths
+            - Literal codelengths
+            - Literal gzipped codelengths
 - 
     id:             uri_partition
     name:           URI Partitioning

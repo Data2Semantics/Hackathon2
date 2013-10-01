@@ -1,0 +1,40 @@
+<div class="well">
+    <h4>{{ name }} <small>Report</small></h4>
+	<p><strong>File: </strong>{{ source }}</p>
+	<label>{{ identifier_key }}</label>
+	<select class="form-control" id="{{ name|escapejs }}_{{ source|escapejs }}">
+	{% for id,values in report.iteritems() %}
+		<option value="#{{ name|escapejs }}_{{ source|escapejs }}_{{ id|escapejs }}" {% if loop.first %}selected{% endif %}>{{ id }}</option>
+	{% endfor %}
+	</select>
+    {% for id,values in report.iteritems() %}
+	<div class='report_table' id='{{ name|escapejs }}_{{ source|escapejs }}_{{ id|escapejs }}'>
+        <table class="table table-striped">
+        {% for k,v in values.iteritems() %}
+        <tr><th>{{ k }}</th><td>{{ v }}</td></tr>
+        {% endfor %}
+        </table>
+	</div>
+    {% endfor %}
+</div>
+
+<script>
+$(function(){
+	
+	var select = $("#{{ name|escapejs }}_{{ source|escapejs }}");
+	console.log(select);
+	
+	$(".report_table").hide();
+	
+	select.on("change", function(e){
+		var optionSelected = $("option:selected", this);
+		console.log(optionSelected);
+		var valueSelected = optionSelected.attr('value');
+		console.log("Clicked "+valueSelected);
+		$(".report_table").hide();
+		$(valueSelected).show();
+	});
+	
+	
+});
+</script>

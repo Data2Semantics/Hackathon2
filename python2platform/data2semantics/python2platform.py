@@ -71,7 +71,8 @@ def run(workflow, datafile, location):
     
     try:
         sp.Popen(args, cwd=basedir, stdout = logFileOut, stderr = logFileOut) # run in the background
-    except Exception as e:
+    except OSError as e:
+        print "OSError: ",
         print e
         return False
 

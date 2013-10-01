@@ -115,9 +115,9 @@ def run(workflow_identifier, dataset_name, source):
     if success :
         app.logger.debug("Workflow initialized...")
     else :
-        app.logger.debug("Something went wrong")
-        #error_file = os.path.join(target, 'status.error')
-        #touch(error_file)
+        app.logger.debug("Something went wrong, workflow did not start")
+        error_file = os.path.join(target, 'status.error')
+        touch(error_file)
         
     
     return source
